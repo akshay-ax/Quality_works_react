@@ -13,6 +13,7 @@
     "@mui/styled-engine-sc": "^5.0.0",
     "@mui/styles": "^5.0.1",
     "@syncfusion/ej2-react-buttons": "^19.3.43",
+    "@syncfusion/ej2-react-dropdowns": "^19.3.46",
     "@syncfusion/ej2-react-grids": "^19.3.43",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",

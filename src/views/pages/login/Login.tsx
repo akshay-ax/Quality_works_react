@@ -19,6 +19,7 @@ import { common } from "@mui/material/colors";
 import { login } from "../../../provider/AuthProvider";
 import { FunctionComponent } from "react";
 import { Route, useHistory } from "react-router";
+import { Password } from "@mui/icons-material";
 
 type LoginInputs = {
   username: string;
@@ -111,6 +112,7 @@ const Login: FunctionComponent = ({ children }) => {
                 <FormControl variant="filled">
                   <InputLabel htmlFor="password">Password</InputLabel>
                   <FilledInput
+                    type="password"
                     {...register("password", { required: true })}
                     id="password"
                     sx={{ mb: 2 }}
@@ -131,6 +133,7 @@ const Login: FunctionComponent = ({ children }) => {
                   onClick={handleSubmit(onSubmit)}
                   sx={{
                     p: 1.5,
+                    backgroundColor: "#28A428",
                     color: common.white,
                     fontFamily: "Roboto",
                     fontSize: "20px",

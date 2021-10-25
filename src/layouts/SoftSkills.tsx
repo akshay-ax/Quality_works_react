@@ -1,13 +1,44 @@
 import { Box, Card, CardContent, Grid, Stack, Typography } from "@mui/material";
 import { createStyles, makeStyles } from "@mui/styles";
-import React, { PureComponent } from "react";
+import React, { PureComponent, useEffect, useState } from "react";
 import HighchartsReact from "highcharts-react-official";
 import Highcharts from "highcharts";
-import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
+import {
+  buildStyles,
+  CircularProgressbar,
+  CircularProgressbarWithChildren,
+} from "react-circular-progressbar";
 import { padding } from "@mui/system";
+import { authFetch } from "../provider/AuthProvider";
+import { useSelector } from "react-redux";
+import AnalayticService from "../Services/Analatics/Agents.service";
 
 function SoftSkills() {
+  const storeData = useSelector((state: any) => state?.FilterReducer?.data);
   const classes = useStyles();
+  const [dataSource, setDataSource] = useState<any>({});
+
+  useEffect(() => {
+    // const dateRequestOptions = {
+    //   method: "POST",
+    //   headers: { "Content-Type": "application/json" },
+    //   body: JSON.stringify({
+    //     Agent_id: storeData.Agent_id,
+    //     Team_id: storeData.Team_id,
+    //     Lob_id: storeData.LOB_id,
+    //   }),
+    // };
+    // authFetch("http://192.168.1.3:8000/elastic/softskill/", dateRequestOptions)
+    //   .then((res) => res.json())
+    AnalayticService.SoftSkillData(
+      storeData.LOB_id,
+      storeData.Team_id,
+      storeData.Agent_id
+    ).then((res) => {
+      setDataSource(res.data);
+      console.log(res.data);
+    });
+  }, []);
 
   return (
     <div>
@@ -76,8 +107,11 @@ function SoftSkills() {
           <Typography variant="h4">Empathy</Typography>
           <Grid container>
             <Grid item xs={12}>
-              <Box className={classes.chart} sx={{ mt: 1 }}>
-                <EmpathyCharts />
+              <Box
+                className={classes.chart}
+                sx={{ mt: 1, pt: 5, pl: 5, pr: 5 }}
+              >
+                <EmpathyCharts value={dataSource} />
               </Box>
             </Grid>
           </Grid>
@@ -86,30 +120,136 @@ function SoftSkills() {
           </Typography>
           <Grid container sx={{ mt: 0.5 }} spacing={2}>
             <Grid item xs={6}>
-              <Box className={classes.chart}>
-                <RateOfSpeechCharts />
+              <Box
+                className={classes.chart}
+                sx={{ padding: "25px 25px 15px 25px" }}
+              >
+                <RateOfSpeechCharts value={dataSource} />
               </Box>
             </Grid>
             <Grid item xs={6}>
-              <Box className={classes.chart}>
-                <VoiceVolumeCharts />
+              <Box
+                className={classes.chart}
+                sx={{ padding: "25px 25px 15px 25px" }}
+              >
+                <VoiceVolumeCharts value={dataSource} />
               </Box>
             </Grid>
           </Grid>
           <Grid container sx={{ mt: 0.5 }} spacing={2}>
             <Grid item xs={4}>
               <Box className={classes.chart}>
-                <SemiCircleBar value={50} />
+                <Typography variant="h4" sx={{ mt: 3, ml: 3, mb: 2 }}>
+                  Curiosity
+                </Typography>
+                <SemiCircleBar
+                  value={dataSource.Curiousity}
+                  color={dataSource.Curiousity_color}
+                  range={dataSource.Curiousity_range}
+                />
+                {/* <CircularProgressbarWithChildren
+                  className={classes.semiCircle}
+                  value={dataSource.Curiousity}
+                  // color={props.value.Curiousity_color}
+                  circleRatio={0.5}
+                  strokeWidth={3}
+                  styles={buildStyles({
+                    rotation: 0.75,
+                    strokeLinecap: "butt",
+                    trailColor: "#eee",
+                    pathColor: dataSource.Curiousity_color,
+                  })}
+                >
+                  <div style={{ marginTop: 400 }}>
+                    <strong style={{ fontSize: 28 }}>
+                      {dataSource.Curiousity}%
+                    </strong>
+                    <br />
+                    <h6 style={{ fontSize: 16, fontWeight: 500 }}>
+                      {dataSource.Curiousity_range}
+                    </h6>
+                  </div>
+                </CircularProgressbarWithChildren> */}
+                {/* {dataSource.Curiousity_range} */}
+                {/* <Typography className={classes.typography}>
+                  {dataSource.Curiousity_range}{" "}
+                </Typography> */}
               </Box>
             </Grid>
             <Grid item xs={4}>
               <Box className={classes.chart}>
-                <SemiCircleBar value={80} />
+                <Typography variant="h4" sx={{ mt: 3, ml: 3, mb: 2 }}>
+                  Clarity
+                </Typography>
+                <SemiCircleBar
+                  value={dataSource.Clarity}
+                  color={dataSource.Clarity_color}
+                  range={dataSource.Clarity_range}
+                />
+                {/* <CircularProgressbarWithChildren
+                  className={classes.semiCircle}
+                  value={dataSource.Clarity}
+                  // color={props.value.Curiousity_color}
+                  circleRatio={0.5}
+                  strokeWidth={3}
+                  styles={buildStyles({
+                    rotation: 0.75,
+                    strokeLinecap: "butt",
+                    trailColor: "#eee",
+                    pathColor: dataSource.Clarity_color,
+                  })}
+                >
+                  <div style={{ marginTop: 400 }}>
+                    <strong style={{ fontSize: 28 }}>
+                      {dataSource.Clarity}%
+                    </strong>
+                    <br />
+                    <h6 style={{ fontSize: 16, fontWeight: 500 }}>
+                      {dataSource.Clarity_range}
+                    </h6>
+                  </div>
+                </CircularProgressbarWithChildren> */}
+                {/* <Typography className={classes.typography}>
+                  {dataSource.Clarity_range}{" "}
+                </Typography> */}
               </Box>
             </Grid>
             <Grid item xs={4}>
               <Box className={classes.chart}>
-                <SemiCircleBar value={40} />
+                <Typography variant="h4" sx={{ mt: 3, ml: 3, mb: 2 }}>
+                  Responsiveness
+                </Typography>
+                <SemiCircleBar
+                  value={dataSource.Responsiveness}
+                  color={dataSource.Responsiveness_color}
+                  range={dataSource.Responsiveness_range}
+                />
+                {/* <CircularProgressbarWithChildren
+                  className={classes.semiCircle}
+                  value={dataSource.Responsiveness}
+                  // color={props.value.Curiousity_color}
+                  circleRatio={0.5}
+                  strokeWidth={3}
+                  styles={buildStyles({
+                    rotation: 0.75,
+                    strokeLinecap: "butt",
+                    trailColor: "#eee",
+                    pathColor: dataSource.Responsiveness_color,
+                  })}
+                >
+                  <div style={{ marginTop: 400 }}>
+                    <strong style={{ fontSize: 28 }}>
+                      {dataSource.Responsiveness}%
+                    </strong>
+                    <br />
+                    <h6 style={{ fontSize: 16, fontWeight: 500 }}>
+                      {dataSource.Responsiveness_range}
+                    </h6>
+                  </div>
+                </CircularProgressbarWithChildren> */}
+                {/* <Typography className={classes.typography}>
+                  {dataSource.Responsiveness_range}{" "}
+                </Typography> */}
               </Box>
             </Grid>
           </Grid>
@@ -122,26 +262,85 @@ function SoftSkills() {
 export default SoftSkills;
 
 const SemiCircleBar = (props) => {
-  const classes = useStyles();
+  console.log(props);
+  var data = [
+    {
+      name: "Done",
+      y: props.value,
+      color: `${props.color}`,
+      dataLabels: {
+        enabled: false,
+      },
+    },
+    {
+      name: "To do",
+      y: 100 - props.value,
+      color: "#dddddd",
+      dataLabels: {
+        enabled: false,
+      },
+    },
+  ];
+  const opts = {
+    chart: {
+      plotBorderWidth: 0,
+      height: "250px",
+    },
+    credits: {
+      enabled: false,
+    },
+    title: {
+      margin: 50,
+      text: `${props.value}%`,
+      align: "center",
+      verticalAlign: "middle",
+      y: 20,
+      style: {
+        fontWeight: 700,
+        fontSize: "32px",
+        fontFamily: "Roboto",
+        color: "#00000",
+      },
+    },
+    subtitle: {
+      text: `${props.range}`,
+      align: "center",
+      verticalAlign: "middle",
+      y: 35,
+      style: {
+        fontWeight: "normal",
+        fontSize: "14px",
+        fontFamily: "Roboto",
+        color: "#757575",
+      },
+    },
+    tooltip: {
+      pointFormat: "<b>{point.percentage:.1f}%</b>",
+    },
+    plotOptions: {
+      pie: {
+        dataLabels: {
+          enabled: true,
+          distance: -50,
+          style: { fontWeight: "bold", color: "white" },
+        },
+        startAngle: -90,
+        endAngle: 90,
+        center: ["50%", "70%"],
+        size: "150%",
+      },
+    },
+    series: [{ type: "pie", name: "Value", innerSize: "93%", data: data }],
+  };
   return (
-    <>
-      <CircularProgressbar
-        className={classes.semiCircle}
-        value={props.value}
-        text={`${props.value}%`}
-        circleRatio={0.5}
-        strokeWidth={3}
-        styles={buildStyles({
-          rotation: 0.75,
-          strokeLinecap: "butt",
-          trailColor: "#eee",
-        })}
-      />
-    </>
+    <div>
+      <HighchartsReact highcharts={Highcharts} options={opts} />
+    </div>
   );
 };
 
-const EmpathyCharts = () => {
+const EmpathyCharts = (props) => {
+  console.log(props);
   const classes = useStyles();
   const opts = {
     chart: {
@@ -161,6 +360,16 @@ const EmpathyCharts = () => {
     },
     xAxis: {
       type: "category",
+      labels: {
+        y: -8,
+        style: {
+          fontFamily: "Roboto",
+          fontStyle: "normal",
+          fontWeight: "normal",
+          fontSize: "14px",
+          color: "#616161",
+        },
+      },
     },
     yAxis: {
       min: 0,
@@ -170,7 +379,7 @@ const EmpathyCharts = () => {
         format: "{value}%",
       },
       title: {
-        text: "Total percent market share",
+        text: "",
       },
     },
     legend: {
@@ -178,6 +387,7 @@ const EmpathyCharts = () => {
     },
     plotOptions: {
       series: {
+        pointWidth: 40,
         borderWidth: 0,
         dataLabels: {
           enabled: true,
@@ -195,25 +405,37 @@ const EmpathyCharts = () => {
     series: [
       {
         name: "High",
-        colorByPoint: true,
+        color: "#4CC57E",
         data: [
           {
             name: "Curiosity",
-            y: 45,
+            y: props.value.Curiousity,
+            color: props.value.Curiousity_color,
           },
           {
             name: "Paraphrasing",
-            y: 35,
+            y: props.value.Paraphrasing,
+            color: props.value.Paraphrasing_color,
           },
           {
             name: "Listening",
-            y: 80,
+            y: props.value["Active Listening"],
+            color: props.value["Active Listening_color"],
           },
           {
             name: "Probing",
-            y: 20,
+            y: props.value.Probing,
+            color: props.value.Probing_color,
           },
         ],
+      },
+      {
+        name: "Medium",
+        color: "#F8DA77",
+      },
+      {
+        name: "Low",
+        color: "#D65654",
       },
     ],
   };
@@ -224,15 +446,55 @@ const EmpathyCharts = () => {
   );
 };
 
-const RateOfSpeechCharts = () => {
+const RateOfSpeechCharts = (props) => {
+  console.log(props);
   const options = {
     chart: {
       type: "area",
+      events: {
+        load: function () {
+          var chart = this,
+            // points = chart.series[0].points,
+            maxValue,
+            chosenPoint;
+          console.log(chart);
+
+          // points.forEach(function (point, index) {
+          //   if (!maxValue || maxValue < point.y) {
+          //     maxValue = point.y;
+          //     chosenPoint = point;
+          //   }
+          // });
+
+          // chosenPoint.update({
+          //   marker: {
+          //     symbol:
+          //       "url(https://www.highcharts.com/samples/graphics/sun.png)",
+          //   },
+          // });
+        },
+      },
     },
+    yAxis: {
+      min: 80,
+      max: 250,
+      tickInterval: 50,
+      labels: {
+        format: "{value}",
+      },
+      title: {
+        text: "",
+      },
+    },
+
     title: {
-      text: "Example Chart",
+      margin: 25,
+      text: "Rate of Speech",
+      align: "left",
       style: {
-        color: "#00000",
+        fontFamily: "Roboto",
+        fontWeight: "bold",
+        color: "#212121",
       },
     },
     legend: {
@@ -249,11 +511,22 @@ const RateOfSpeechCharts = () => {
     tooltip: {
       shared: false,
       valueSuffix: "points",
+      min: props.value.min_rate_of_speech,
     },
     credits: {
       enabled: false,
     },
+
+    //   tooltip: {
+    //     formatter: function() {
+    //         return 'The value for <b>' + this.x + '</b> is <b>' + this.y + '</b>, in series '+ this.series.name;
+    //     }
+    // },
+
     plotOptions: {
+      area: {
+        fillColor: "#D6F5D6",
+      },
       series: {
         lineWidth: 3,
         fillOpacity: 0.5,
@@ -275,56 +548,68 @@ const RateOfSpeechCharts = () => {
     },
     series: [
       {
-        name: "Max WPM",
-        color: "#D6F5D6",
-        data: [
-          29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1,
-          95.6, 54.4,
-        ],
-      },
-    ],
-  };
-  const opts = {
-    chart: {},
-    title: {
-      text: "Rate of Speech",
-      align: "left",
-    },
-    xAxis: {
-      labels: { enabled: false },
-    },
-    credits: {
-      enabled: false,
-    },
-    plotOptions: {
-      series: {
-        lineWidth: 3,
-        fillOpacity: 0.5,
-        shadow: {
-          color: "#ffffff",
-          width: 1,
-          opacity: 1,
-          offsetY: 3,
-          offsetX: 0,
-        },
+        name: "Avg ROS: Fast",
         marker: {
-          fillColor: "#FFFFFF",
-          lineWidth: 2,
-          lineColor: null, // inherit from series
+          symbol: "triangle",
         },
       },
-    },
-
-    series: [
       {
-        name: "Max WPM",
-        data: [
-          29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1,
-          95.6, 54.4,
-        ],
+        name: "Avg WPM: 120",
+        color: "#4CC57E",
+        data: props.value.rate_of_speech,
+        marker: {
+          symbol: "triangle",
+        },
+      },
+      {
+        name: "language: English",
+        marker: {
+          symbol: "triangle",
+        },
       },
     ],
   };
+  // const opts = {
+  //   chart: {},
+  //   title: {
+  //     text: "Rate of Speech",
+  //     align: "left",
+  //   },
+  //   xAxis: {
+  //     labels: { enabled: false },
+  //   },
+  //   credits: {
+  //     enabled: false,
+  //   },
+  //   plotOptions: {
+  //     series: {
+  //       lineWidth: 3,
+  //       fillOpacity: 0.5,
+  //       shadow: {
+  //         color: "#ffffff",
+  //         width: 1,
+  //         opacity: 1,
+  //         offsetY: 3,
+  //         offsetX: 0,
+  //       },
+  //       marker: {
+  //         fillColor: "#FFFFFF",
+  //         lineWidth: 2,
+  //         lineColor: null, // inherit from series
+  //       },
+  //     },
+  //   },
+
+  //   series: [
+  //     {
+  //       name: "Max WPM",
+  //       data: [
+  //         29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1,
+  //         95.6, 54.4,
+  //       ],
+  //     },
+  //   ],
+  // };
 
   return (
     <div>
@@ -333,15 +618,21 @@ const RateOfSpeechCharts = () => {
   );
 };
 
-const VoiceVolumeCharts = () => {
+const VoiceVolumeCharts = (props) => {
   const opts = {
     chart: {
       type: "area",
       // title: "Rate of Speech",
     },
     title: {
+      margin: 25,
       text: "Voice Volume",
       align: "left",
+      style: {
+        fontFamily: "Roboto",
+        fontWeight: "bold",
+        color: "#212121",
+      },
     },
     xAxis: {
       labels: { enabled: false },
@@ -349,7 +640,15 @@ const VoiceVolumeCharts = () => {
     credits: {
       enabled: false,
     },
+    yAxis: {
+      title: {
+        text: "",
+      },
+    },
     plotOptions: {
+      area: {
+        fillColor: "#FFECE6",
+      },
       series: {
         lineWidth: 3,
         fillOpacity: 0.5,
@@ -372,12 +671,12 @@ const VoiceVolumeCharts = () => {
 
     series: [
       {
-        name: "Max Volume",
-        color: "#FFECE6",
-        data: [
-          29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1,
-          95.6, 54.4,
-        ],
+        name: "Avg Volume: 50Db",
+        color: "#D65654",
+        data: props.value.voice_volume,
+        marker: {
+          symbol: "triangle",
+        },
       },
     ],
   };
@@ -390,6 +689,10 @@ const VoiceVolumeCharts = () => {
 
 const useStyles = makeStyles((theme) =>
   createStyles({
+    typography: {
+      marginTop: "-85px",
+      marginLeft: "162px",
+    },
     chart: {
       borderRadius: "4px",
       border: "1px solid #E0E0E0",
@@ -410,10 +713,14 @@ const useStyles = makeStyles((theme) =>
     },
     semiCircle: {
       "&.CircularProgressbar": {
-        height: "285px",
-        paddingTop: "70px",
+        height: "325px",
+        paddingTop: "30px",
         paddingRight: "70px",
         paddingLeft: "70px",
+      },
+      "& .CircularProgressbar-text": {
+        fontSize: "8px",
+        fill: "#212121",
       },
     },
   })

@@ -83,13 +83,19 @@ function Voice() {
         </Grid>
         <Grid container spacing={2} sx={{ pl: 4, mt: 2 }}>
           <Grid item xs={6}>
-            <Box className={classes.chart}>
-              <CallTransferRate title="Overtalk incidents" />
+            <Box
+              className={classes.chart}
+              sx={{ padding: "20px 25px 30px 25px" }}
+            >
+              <VoiceChart title="Overtalk incidents" />
             </Box>
           </Grid>
           <Grid item xs={6}>
-            <Box className={classes.chart}>
-              <CallTransferRate title="Silent incidents" />
+            <Box
+              className={classes.chart}
+              sx={{ padding: "25px 25px 30px 25px" }}
+            >
+              <VoiceChart title="Silent incidents" />
             </Box>
           </Grid>
         </Grid>
@@ -100,18 +106,20 @@ function Voice() {
 
 export default Voice;
 
-const CallTransferRate = (props) => {
+const VoiceChart = (props) => {
   const opts = {
     chart: {
       type: "column",
     },
     title: {
+      margin: 30,
       text: props.title,
       align: "left",
-      fontFamily: "Roboto",
-      fontStyle: "normal",
-      fontWeight: 600,
-      fontSize: "16px",
+      style: {
+        fontFamily: "Roboto",
+        fontWeight: "bold",
+        color: "#212121",
+      },
       // line-height: 24px;
     },
     xAxis: {
@@ -133,6 +141,9 @@ const CallTransferRate = (props) => {
       tickInterval: 50,
       labels: {
         format: "{value}%",
+      },
+      title: {
+        text: "",
       },
     },
     credits: {
@@ -163,7 +174,7 @@ const CallTransferRate = (props) => {
     series: [
       {
         name: `Avg ${props.title}: 10`,
-        data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5],
+        data: [45, 78, 50, 45, 45, 45, 78, 45],
         pointStart: Date.UTC(2021, 6, 11),
         pointInterval: 24 * 3600 * 10000 * 6, // sample interval
       },

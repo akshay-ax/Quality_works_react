@@ -22,6 +22,82 @@ const theme = createTheme({
       contrastText: "#fff",
     },
   },
+  overrides: {
+    RaMenuItemLink: {
+      root: {
+        borderLeft: "3px solid #fff",
+      },
+      active: {
+        borderLeft: "3px solid #4f3cc9",
+      },
+    },
+    MuiPaper: {
+      elevation1: {
+        boxShadow: "none",
+      },
+      root: {
+        border: "1px solid #e0e0e3",
+        backgroundClip: "padding-box",
+      },
+    },
+    MuiButton: {
+      contained: {
+        backgroundColor: "#fff",
+        color: "#4f3cc9",
+        boxShadow: "none",
+      },
+    },
+    MuiButtonBase: {
+      root: {
+        "&:hover:active::after": {
+          // recreate a static ripple color
+          // use the currentColor to make it work both for outlined and contained buttons
+          // but to dim the background without dimming the text,
+          // put another element on top with a limited opacity
+          content: '""',
+          display: "block",
+          width: "100%",
+          height: "100%",
+          position: "absolute",
+          top: 0,
+          right: 0,
+          backgroundColor: "currentColor",
+          opacity: 1,
+          borderRadius: "inherit",
+        },
+      },
+    },
+    MuiAppBar: {
+      colorSecondary: {
+        color: "#D65654",
+        backgroundColor: "#D65654",
+      },
+    },
+    MuiLinearProgress: {
+      primary: {
+        color: "#D65654",
+      },
+      colorPrimary: {
+        backgroundColor: "#D65654",
+      },
+      barColorPrimary: {
+        backgroundColor: "#D65654",
+      },
+    },
+    MuiFilledInput: {
+      root: {
+        backgroundColor: "rgba(0, 0, 0, 0.04)",
+        "&$disabled": {
+          backgroundColor: "rgba(0, 0, 0, 0.04)",
+        },
+      },
+    },
+    MuiSnackbarContent: {
+      root: {
+        border: "none",
+      },
+    },
+  },
   typography: {
     fontFamily: "Roboto",
     fontWeight: "normal",
@@ -132,16 +208,19 @@ export const themes = {
     },
     MuiAppBar: {
       colorSecondary: {
-        color: "#808080",
-        backgroundColor: "#fff",
+        color: "#D65654",
+        backgroundColor: "#D65654",
       },
     },
     MuiLinearProgress: {
+      primary: {
+        color: "#D65654",
+      },
       colorPrimary: {
-        backgroundColor: "#f5f5f5",
+        backgroundColor: "#D65654",
       },
       barColorPrimary: {
-        backgroundColor: "#d7d7d7",
+        backgroundColor: "#D65654",
       },
     },
     MuiFilledInput: {

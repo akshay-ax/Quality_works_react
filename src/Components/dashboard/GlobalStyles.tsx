@@ -7,11 +7,12 @@ const useStyles: any = makeStyles(() =>
         width: "0.4em",
       },
       "*::-webkit-scrollbar-track": {
-        "-webkit-box-shadow": "inset 0 0 6px slategrey",
+        "-webkit-box-shadow": "inset 0 0 6px #BDBDBD",
       },
       "*::-webkit-scrollbar-thumb": {
-        backgroundColor: "slategrey",
-        outline: "1px solid slategrey",
+        backgroundColor: "#BDBDBD",
+        borderRadius: "24px",
+        outline: "1px solid #BDBDBD",
       },
       "a:hover ": {
         textDecoration: "none",

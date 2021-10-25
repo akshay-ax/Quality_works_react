@@ -54,7 +54,7 @@ const AppMenuItem: React.FC<AppMenuItemProps> = (props) => {
       <ListItemButton
         sx={{
           color: "#9E9E9E",
-          pl: depth,
+          p: 2,
           ...(open && {
             boxShadow: "inset 4px 0px 0px #0070C0",
             background: "#F5F5F5",
@@ -68,7 +68,6 @@ const AppMenuItem: React.FC<AppMenuItemProps> = (props) => {
           <ListItemIcon
             className={classes.menuItemIcon}
             sx={{
-              paddingLeft: "4px",
               ...(open && {
                 color: "#0070C0",
               }),
@@ -91,9 +90,9 @@ const AppMenuItem: React.FC<AppMenuItemProps> = (props) => {
     var a = (
       <ListItemButton
         sx={{
-          pl: depth,
           background: "rgba(236, 236, 236, 0.72)",
           color: "#757575",
+          p: 2,
           ...(open && {
             fontWeight: "500",
             color: "#212121",
@@ -103,13 +102,16 @@ const AppMenuItem: React.FC<AppMenuItemProps> = (props) => {
       >
         {/* Display an icon if any */}
         {!!Icon && (
-          <ListItemIcon className={classes.menuItemIcon}>
+          <ListItemIcon
+            sx={{ pl: "16px", minWidth: "45px" }}
+            className={classes.menuItemIcon}
+          >
             <Icon />
           </ListItemIcon>
         )}
         <ListItemText
           disableTypography={true}
-          sx={{ fontSize: "14px !important" }}
+          sx={{ fontSize: "14px !important", pl: "12px" }}
           primary={title}
           inset={!Icon}
         />
@@ -122,13 +124,16 @@ const AppMenuItem: React.FC<AppMenuItemProps> = (props) => {
     var a = (
       <ListItemButton
         sx={{
-          pl: 2,
+          p: 2,
         }}
         onClick={handleClick}
       >
         {/* Display an icon if any */}
         {!!Icon && (
-          <ListItemIcon className={classes.menuItemIcon}>
+          <ListItemIcon
+            sx={{ minWidth: "45px" }}
+            className={classes.menuItemIcon}
+          >
             <Icon />
           </ListItemIcon>
         )}
@@ -150,7 +155,8 @@ const AppMenuItem: React.FC<AppMenuItemProps> = (props) => {
       <ListItemButton
         sx={{
           pl: depth,
-          color: "#9E9E9E",
+          p: "16px",
+          color: "#757575",
           ...(open && {
             boxShadow: "inset 4px 0px 0px #0070C0",
             background: "#F5F5F5",
@@ -165,7 +171,7 @@ const AppMenuItem: React.FC<AppMenuItemProps> = (props) => {
           <ListItemIcon
             className={classes.menuItemIcon}
             sx={{
-              paddingLeft: "12px",
+              minWidth: "45px",
               ...(open && {
                 color: "#0070C0",
               }),
@@ -219,7 +225,8 @@ const useStyles = makeStyles((theme) =>
       backgroundColor: "#ffffff",
     },
     menuItemIcon: {
-      Width: 56,
+      Width: "24px",
+      height: "24px",
     },
     active: {
       color: "#757575",

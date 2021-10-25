@@ -2,10 +2,38 @@ import { Box, Card, CardContent, Grid, Stack, Typography } from "@mui/material";
 import { createStyles, makeStyles } from "@mui/styles";
 import HighchartsReact from "highcharts-react-official";
 import Highcharts from "highcharts";
-import { CircularProgressbar } from "react-circular-progressbar";
+import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
+import { useEffect, useState } from "react";
+import { authFetch } from "../provider/AuthProvider";
+import { useSelector } from "react-redux";
+import AnalayticService from "../Services/Analatics/Agents.service";
 
 function CallClosure() {
+  const storeData = useSelector((state: any) => state?.FilterReducer?.data);
   const classes = useStyles();
+  const [CallClosureData, setCallClosureData] = useState<any>();
+
+  useEffect(() => {
+    // const requestOptions = {
+    //   method: "POST",
+    //   headers: { "Content-Type": "application/json" },
+    //   body: JSON.stringify({
+    //     Agent_id: storeData.Agent_id,
+    //     Team_id: storeData.Team_id,
+    //     Lob_id: storeData.LOB_id,
+    //   }),
+    // };
+    // authFetch("http://192.168.1.3:8000/elastic/callclosure/", requestOptions)
+    //   .then((res) => res.json())
+    AnalayticService.CallCloserData(
+      storeData.Agent_id,
+      storeData.Team_id,
+      storeData.LOB_id
+    ).then((res) => {
+      setCallClosureData(res.data);
+      console.log(res.data);
+    });
+  }, []);
 
   return (
     <div>
@@ -81,10 +109,15 @@ function CallClosure() {
           </Typography>
         </Stack>
         <Grid container spacing={2} sx={{ pl: 2 }}>
-          <Grid item xs={3} md={4}>
-            <CircularProgressWithLabel value={10} />
-          </Grid>
-          <Grid item xs={3} md={4}>
+          {CallClosureData &&
+            CallClosureData.Call_Opening.map((item) => {
+              return (
+                <Grid item lg={4} xl={4}>
+                  <CircularProgressWithLabel value={item} />
+                </Grid>
+              );
+            })}
+          {/* <Grid item xs={3} md={4}>
             <CircularProgressWithLabel value={20} />
           </Grid>
           <Grid item xs={3} md={4}>
@@ -101,16 +134,19 @@ function CallClosure() {
           </Grid>
           <Grid item xs={3} md={4}>
             <CircularProgressWithLabel value={90} />
-          </Grid>
+          </Grid> */}
         </Grid>
         <Grid container spacing={2} sx={{ pl: 4, mt: 2 }}>
-          <Grid item xs={4}>
-            <Typography sx={{ mb: 2 }} variant="h4">
+          <Grid item xs={12}>
+            <Box className={classes.chart} sx={{ mt: 1, pt: 5, pl: 5, pr: 5 }}>
+              <EmpathyCharts value={CallClosureData} />
+            </Box>
+            {/* <Typography sx={{ mb: 2 }} variant="h4">
               Additional Information
             </Typography>
-            <Box className={classes.chart}></Box>
+            <Box className={classes.chart}></Box> */}
           </Grid>
-          <Grid item xs={4}>
+          {/* <Grid item xs={4}>
             <Typography sx={{ mb: 2 }} variant="h4">
               Alternative Channels
             </Typography>
@@ -123,7 +159,7 @@ function CallClosure() {
             <Box className={classes.chart}>
               <ProgressCircleCharts />
             </Box>
-          </Grid>
+          </Grid> */}
         </Grid>
       </Grid>
     </div>
@@ -143,10 +179,7 @@ function CircularProgressWithLabel(props) {
           alignItems="center"
         >
           <Grid item xs={8}>
-            <Typography variant="subtitle1">
-              Hello, I am Denis Godhani , Hello, I am Denis Godhani, Hello, I am
-              Denis Godhani
-            </Typography>
+            <Typography variant="subtitle1">{props.value.key}</Typography>
           </Grid>
           <Grid item xs={2}>
             <Box
@@ -158,8 +191,14 @@ function CircularProgressWithLabel(props) {
               }}
             >
               <CircularProgressbar
-                value={props.value}
-                text={`${props.value}%`}
+                value={props.value.value}
+                text={`${props.value.value}%`}
+                styles={buildStyles({
+                  pathColor: props.value.color,
+                  textColor: "#000000",
+                  trailColor: "#d6d6d6",
+                  backgroundColor: "#3e98c7",
+                })}
               />
             </Box>
           </Grid>
@@ -168,6 +207,109 @@ function CircularProgressWithLabel(props) {
     </Card>
   );
 }
+
+const EmpathyCharts = (props) => {
+  console.log(props);
+  const classes = useStyles();
+  const opts = {
+    chart: {
+      type: "bar",
+      height: "300px",
+    },
+    title: {
+      text: "",
+      align: "left",
+    },
+    credits: {
+      enabled: false,
+    },
+    accessibility: {
+      announceNewData: {
+        enabled: true,
+      },
+    },
+    xAxis: {
+      type: "category",
+      labels: {
+        y: -8,
+        style: {
+          fontFamily: "Roboto",
+          fontStyle: "normal",
+          fontWeight: "normal",
+          fontSize: "14px",
+          color: "#616161",
+        },
+      },
+    },
+    yAxis: {
+      min: 0,
+      max: 100,
+      tickInterval: 20,
+      labels: {
+        format: "{value}%",
+      },
+      title: {
+        text: "",
+      },
+    },
+    legend: {
+      enabled: true,
+    },
+    plotOptions: {
+      series: {
+        pointWidth: 40,
+        borderWidth: 0,
+        dataLabels: {
+          enabled: true,
+          format: "{point.y:.1f}%",
+        },
+      },
+    },
+
+    tooltip: {
+      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+      pointFormat:
+        '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>',
+    },
+
+    series: [
+      {
+        name: "High",
+        color: "#4CC57E",
+        data: [
+          {
+            name: "Additional Information",
+            y: props.value?.Additional_Information,
+            color: props.value?.Additional_Information_color,
+          },
+          {
+            name: "Alternative Channels",
+            y: props.value?.Alternative_Channels,
+            color: props.value?.Alternative_Channels_color,
+          },
+          {
+            name: "Call Summarizations",
+            y: props.value?.Call_Summarizations,
+            color: props.value?.Call_Summarizations_color,
+          },
+        ],
+      },
+      {
+        name: "Medium",
+        color: "#F8DA77",
+      },
+      {
+        name: "Low",
+        color: "#D65654",
+      },
+    ],
+  };
+  return (
+    <div>
+      <HighchartsReact highcharts={Highcharts} options={opts} />
+    </div>
+  );
+};
 
 const ProgressCircleCharts = (props) => {
   const options = {

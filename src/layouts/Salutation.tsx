@@ -38,7 +38,7 @@ import SendIcon from "@mui/icons-material/Send";
 import DownloadIcon from "@mui/icons-material/Download";
 import { DateRange } from "@mui/lab/DateRangePicker";
 
-import { CircularProgressbar } from "react-circular-progressbar";
+import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import { createStyles, makeStyles } from "@mui/styles";
 import { authFetch } from "../provider/AuthProvider";
@@ -46,25 +46,36 @@ import { MultiSelect } from "react-multi-select-component";
 import moment from "moment";
 import { DateRangePicker } from "rsuite";
 import "rsuite/dist/rsuite.min.css";
+import { useSelector } from "react-redux";
+import AnalayticService from "../Services/Analatics/Agents.service";
 // import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 
 const Salutation = () => {
-  const [lobvalue, setLobvalue] = useState<any>("");
+  const storeData = useSelector((state: any) => state?.FilterReducer?.data);
+  console.log("storedata", storeData);
+  const instance = <DateRangePicker />;
+  const classes = useStyles();
   const [startDate, setStartDate] = useState<any>();
   const [endDate, setEndDate] = useState<any>();
-  const [sopvalue, setSopvalue] = useState<any>("");
-  const [teamvalue, setTeamvalue] = useState<any>("");
-  const [agentvalue, setAgentvalue] = useState<any>("");
   const [showAgentCol, setShowAgentCol] = useState<any>(false);
-  const [value, setValue] = React.useState<DateRange<Date>>([null, null]);
+  const [showcol, setShowcol] = useState<any>(false);
+  const [lobvalue, setLobvalue] = useState<any>([]);
+  const [Teamlist, setTeamlist] = useState<any>();
+  const [Agentlist, setAgentlist] = useState<any>();
+  const [selected, setSelected] = useState<any>([]);
+  const [sopvalue, setSopvalue] = useState<any>([]);
   const [matrixType, setMatrixType] = useState<any>([]);
+  const [MatrixListId, setMatrixListId] = useState<any>([]);
   const [matrixTypeValue, setMatrixTypeValue] = useState<any>([]);
+  const [teamvalue, setTeamvalue] = useState<any>([]);
+  const [agentvalue, setAgentvalue] = useState<any>([]);
+  const [value, setValue] = React.useState<DateRange<Date>>([null, null]);
   const [lob, setLob] = useState<any>([]);
   const [sop, setSop] = useState<any[]>([]);
   const [team, setTeam] = useState<any[]>([]);
   const [agent, setAgent] = useState<any[]>([]);
   const [dataSource, setDataSource] = useState<any>({});
-  const classes = useStyles();
+  const [SalutationData, setSalutationData] = useState<any>({});
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -90,104 +101,206 @@ const Salutation = () => {
     authFetch("http://192.168.1.3:8000/api/soptypes/")
       .then((res) => res.json())
       .then((res) => setSop(res.data));
+    // const requestOptions = {
+    //   method: "POST",
+    //   headers: { "Content-Type": "application/json" },
+    //   body: JSON.stringify({
+    //     Agent_id: storeData.Agent_id,
+    //     Team_id: storeData.Team_id,
+    //     Lob_id: storeData.LOB_id,
+    //   }),
+    // };
+    // authFetch("http://192.168.1.3:8000/elastic/salutation/", requestOptions)
+    //   .then((res) => res.json())
+    AnalayticService.SalutationData(
+      storeData.LOB_id,
+      storeData.Team_id,
+      storeData.Agent_id
+    ).then((res) => {
+      setSalutationData(res.data);
+      console.log(res.data);
+    });
   }, []);
 
   const handleChangelob = (e: SelectChangeEvent) => {
+    console.log(e);
+    setLobvalue(e);
     console.log(e.target.value);
     if (e?.target?.value !== "") {
       setLobvalue(e?.target?.value);
-      if (sopvalue) {
-        const requestOptions = {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ SOP_id: sopvalue, LOB_id: e?.target?.value }),
-        };
-        authFetch("http://192.168.1.3:8000/api/showteam/", requestOptions)
-          .then((res) => res.json())
-          .then((res) => {
-            setTeam(res.data);
-            setTeamvalue("");
-            setAgentvalue("");
-            setAgent([]);
-          });
-      }
-      //   const requestOptions = {
-      //     method: "POST",
-      //     headers: { "Content-Type": "application/json" },
-      //     body: JSON.stringify({ id: e?.target?.value }),
-      //   };
-      // authFetch("http://192.168.1.3:8000/api/soptypes/")
-      // .then((res) => res.json())
-      // .then((res) => setSop(res.data));
-      //   authFetch("http://192.168.1.3:8000/api/showteam/", requestOptions)
-      //     .then((res) => res.json())
-      //     .then((res) => {
-      //       setTeam(res.data);
-      //       setTeamvalue("");
-      //       setAgentvalue("");
-      //     });
+
+      AnalayticService.teamDataShow(e.target.value).then((res) => {
+        setTeam(res.data as Array<any>);
+        setTeamvalue([]);
+        setAgentvalue([]);
+        setAgent([]);
+        setShowAgentCol(false);
+      });
     } else {
-      setLobvalue("");
-      setTeamvalue("");
-      setAgentvalue("");
+      setLobvalue([]);
+      setTeamvalue([]);
+      setAgentvalue([]);
       setTeam([]);
+      setShowAgentCol(false);
       setAgent([]);
+    }
+
+    if (startDate && endDate !== "Invalid date" && e?.target?.value !== "") {
+      const lobId = e.target.value;
+      // dispatch(fetchAnalaticsdataOnLob(startDate, endDate, lobId));
+      const dateRequestOptions = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          start_date: startDate,
+          end_date: endDate,
+          Lob_id: e.target.value,
+        }),
+      };
+
+      AnalayticService.getAllFilterOnLob(
+        startDate,
+        endDate,
+        e.target.value
+      ).then((res) => {
+        setDataSource(res.data);
+        setShowAgentCol(false);
+      });
+    }
+    if (!startDate && !endDate && e?.target?.value !== "") {
+      const lobId = e.target.value;
+      // dispatch(fetchAnalaticsdataOnLob(startDate, endDate, lobId));
+      // setStartDate(moment(new Date()).format("YYYY-MM-DD"));
+      // setEndDate(moment(new Date()).subtract(6, "months").format("YYYY-MM-DD"));
+      // console.log(startDate);
+      // console.log(endDate);
+      const dateRequestOptions = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          // start_date: startDate,
+          // end_date: endDate,
+          Lob_id: e.target.value,
+        }),
+      };
+      AnalayticService.getAllFilterOnLob(e.target.value).then((res) => {
+        setShowAgentCol(false);
+        setDataSource(res.data);
+      });
     }
   };
 
-  const handleChangesop = (e: SelectChangeEvent) => {
-    console.log(e.target.value);
-    if (e?.target?.value !== "" && lobvalue) {
-      setSopvalue(e?.target?.value);
-      const requestOptions = {
+  const handleChangeagent = (event) => {
+    setAgentvalue(event);
+    let agentsId: Array<string> = [];
+
+    event.map((item) => {
+      agentsId.push(item.value);
+    });
+    console.log(typeof agentsId);
+    if (agentsId) {
+      setAgentlist(agentsId);
+      console.log(event);
+      const requestTeamsOptions = {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ SOP_id: e?.target?.value, LOB_id: lobvalue }),
+        body: JSON.stringify({
+          Matrix_list: MatrixListId,
+          Agent_list: agentsId,
+          Team_list: Teamlist,
+          Lob_id: lobvalue,
+          start_date: startDate,
+          end_date: endDate,
+        }),
       };
-      authFetch("http://192.168.1.3:8000/api/showteam/", requestOptions)
+
+      AnalayticService.getAllFilterOnAgent(
+        MatrixListId,
+        agentsId,
+        Teamlist,
+        lobvalue,
+        startDate,
+        endDate
+      )
         .then((res) => res.json())
         .then((res) => {
-          setTeam(res.data);
-          setTeamvalue("");
-          setAgent([]);
-          setAgentvalue("");
+          console.log(res.data);
+          // setDataSource([]);
+          setShowAgentCol(true);
+          setDataSource(res.data);
+          // grid.dataSource.unshift(res.data);
         });
     } else {
-      setSopvalue("");
-      setTeamvalue("");
-      setAgentvalue("");
-      setAgent([]);
-      setTeam([]);
+      setAgentvalue([]);
     }
   };
 
-  console.log(sop);
+  console.log("dataSource :::", dataSource);
 
-  const handleChangeagent = (event: SelectChangeEvent) => {
-    if (event?.target?.value !== "") {
-      setAgentvalue(event?.target?.value);
-      console.log(event);
-    } else {
-      setAgentvalue("");
-    }
-  };
+  const handleChangeteam = (event) => {
+    setTeamvalue(event);
+    var teamsId: Array<string> = [];
 
-  const handleChangeteam = (event: SelectChangeEvent) => {
-    if (event?.target?.value !== "") {
-      setTeamvalue(event?.target?.value);
-      console.log(event.target.value);
-      const requestOptions = {
+    event.map((item) => {
+      teamsId.push(item.value);
+    });
+    setTeamlist(teamsId);
+    console.log(typeof teamsId);
+    if (teamsId) {
+      // dispatch(
+      //   fetchAnalaticsdataOnTeam(
+      //     startDate,
+      //     endDate,
+      //     MatrixListId,
+      //     teamsId,
+      //     Agentlist,
+      //     lobvalue
+      //   )
+      // );
+      const requestTeamsOptions = {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: event?.target?.value }),
+        body: JSON.stringify({
+          Matrix_list: MatrixListId,
+          Agent_list: Agentlist,
+          Team_list: teamsId,
+          Lob_id: lobvalue,
+          start_date: startDate,
+          end_date: endDate,
+        }),
       };
-      authFetch("http://192.168.1.3:8000/api/showagent/", requestOptions)
-        .then((res) => res.json())
-        .then((res) => setAgent(res.data));
+
+      AnalayticService.getAllFilterOnTeam(
+        MatrixListId,
+        Agentlist,
+        teamsId,
+        lobvalue,
+        startDate,
+        endDate
+      ).then((res) => {
+        console.log(res.data);
+        setDataSource(res.data);
+      });
+      // const requestAgentsOptions = {
+      //   method: "POST",
+      //   headers: { "Content-Type": "application/json" },
+      //   body: JSON.stringify({ id: teamsId }),
+      // };
+      AnalayticService.agentDataShow(teamsId).then((res) => {
+        // let agentlist: Array<object> = [];
+        // // res.data.forEach((item) => {
+        // //   agentlist.push({ label: item.Agent_name, value: item.Agent_id });
+        // // });
+        setAgentvalue([]);
+        setAgent([]);
+        setShowAgentCol(false);
+        setAgent(res.data);
+      });
     } else {
-      setTeamvalue("");
-      setAgentvalue("");
+      setTeamvalue([]);
+      setAgentvalue([]);
       setAgent([]);
+      setShowAgentCol(false);
     }
   };
 
@@ -197,44 +310,37 @@ const Salutation = () => {
     setShowAgentCol(false);
     var s_Date = moment(e[0]).format("YYYY-MM-DD");
     var e_Date = moment(e[1]).format("YYYY-MM-DD");
+
     console.log(startDate, endDate !== "Invalid date");
     if (s_Date == e_Date) {
-      const dateRequestOptions = {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          start_date: null,
-          end_date: null,
-          // Matrix_list: MatrixListId,
-          // Agent_list: Agentlist,
-          // Team_list: Teamlist,
-        }),
-      };
-      authFetch(
-        "http://192.168.1.3:8000/elastic/allfilter/",
-        dateRequestOptions
-      )
-        .then((res) => res.json())
-        .then((res) => {
-          setDataSource(res.data);
-        });
+      // const dateRequestOptions = {
+      //   method: "POST",
+      //   headers: { "Content-Type": "application/json" },
+      //   body: JSON.stringify({
+      //     start_date: null,
+      //     end_date: null,
+      //     Matrix_list: MatrixListId,
+      //     Agent_list: Agentlist,
+      //     Team_list: Teamlist,
+      //   }),
+      // };
+
+      AnalayticService.getAllFilterOnDateRange(
+        MatrixListId,
+        Agentlist,
+        Teamlist
+      ).then((res) => {
+        setDataSource(res.data);
+      });
     } else {
       setStartDate(s_Date);
       setEndDate(e_Date);
-      const dateRequestOptions = {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          start_date: s_Date,
-          end_date: e_Date,
-          // Matrix_list: MatrixListId,
-          // Agent_list: Agentlist,
-          // Team_list: Teamlist,
-        }),
-      };
-      authFetch(
-        "http://192.168.1.3:8000/elastic/allfilter/",
-        dateRequestOptions
+      AnalayticService.getAllFilterOnDateRange(
+        MatrixListId,
+        Agentlist,
+        Teamlist,
+        s_Date,
+        e_Date
       )
         .then((res) => res.json())
         .then((res) => {
@@ -252,27 +358,42 @@ const Salutation = () => {
       matrixListId.push(item.value);
     });
     if (matrixListId) {
-      const requestTeamsOptions = {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          Matrix_list: matrixListId,
-          // Agent_list: Agentlist,
-          // Team_list: Teamlist,
-          // Lob_id: lobvalue,
-          // start_date: startDate,
-          // end_date: endDate,
-        }),
-      };
-      authFetch(
-        "http://192.168.1.3:8000/elastic/allfilter/",
-        requestTeamsOptions
-      )
-        .then((res) => res.json())
-        .then((res) => {
-          setDataSource(res.data);
-          console.log(res.data);
-        });
+      console.log(matrixListId);
+      // dispatch(
+      //   fetchAnalaticsdataOnMatrixtype(
+      //     startDate,
+      //     endDate,
+      //     matrixListId,
+      //     Agentlist,
+      //     Teamlist,
+      //     lobvalue
+      //   )
+      // );
+      setMatrixListId(matrixListId);
+      // const requestTeamsOptions = {
+      //   method: "POST",
+      //   headers: { "Content-Type": "application/json" },
+      //   body: JSON.stringify({
+      //     Lob_id: lobvalue,
+      //     Matrix_list: matrixListId,
+      //     Agent_list: Agentlist,
+      //     Team_list: Teamlist,
+      //     start_date: startDate,
+      //     end_date: endDate,
+      //   }),
+      // };
+
+      AnalayticService.getAllFilterOnMatrixType(
+        lobvalue,
+        matrixListId,
+        Agentlist,
+        Teamlist,
+        startDate,
+        endDate
+      ).then((res) => {
+        setDataSource(res.data);
+        console.log(res.data);
+      });
     } else {
     }
   };
@@ -290,43 +411,21 @@ const Salutation = () => {
           <Grid item>
             <DateRangePicker
               format="yyyy-MM-dd"
+              placeholder="Select Date"
               onChange={daterange}
               className={classes.dateRange}
             />
-            {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
-              <DateRangePicker
-                label="Advanced keyboard"
-                value={value}
-                onChange={daterange}
-                renderInput={(startProps, endProps) => (
-                  <React.Fragment>
-                    <Box sx={{ mx: 1 }}> From </Box>
-                    <div>
-                      <input
-                        className={classes.dateInput}
-                        ref={startProps.inputRef as React.Ref<HTMLInputElement>}
-                        {...startProps.inputProps}
-                        // endIcon={<CalendarTodayIcon />}
-                      />
-                    </div>
-                    <Box sx={{ mx: 1 }}> to </Box>
-                    <input
-                      placeholder="select date"
-                      className={classes.dateInput}
-                      ref={endProps.inputRef as React.Ref<HTMLInputElement>}
-                      {...endProps.inputProps}
-                    />
-                  </React.Fragment>
-                )}
-              />
-            </LocalizationProvider> */}
           </Grid>
           <Grid item>
             <FormControl sx={{ minWidth: 120 }}>
               <Select
                 value={lobvalue}
                 onChange={handleChangelob}
+                sx={{ width: "148.77px" }}
                 displayEmpty
+                IconComponent={(_props) => (
+                  <KeyboardArrowDownIcon sx={{ mr: 1 }} />
+                )}
                 disableUnderline={true}
                 className={classes.Select}
                 inputProps={{
@@ -351,7 +450,7 @@ const Salutation = () => {
           </Grid>
           <Grid item>
             {" "}
-            <Box sx={{ width: "130px" }}>
+            <Box sx={{ width: "148px" }}>
               <MultiSelect
                 options={team}
                 onChange={handleChangeteam}
@@ -372,7 +471,7 @@ const Salutation = () => {
           </Grid>
           <Grid item>
             {" "}
-            <Box sx={{ width: "130px" }}>
+            <Box sx={{ width: "148px" }}>
               <MultiSelect
                 options={agent}
                 className={classes.Select}
@@ -385,9 +484,9 @@ const Salutation = () => {
               />
             </Box>
           </Grid>
-          {/* <Grid item>
+          <Grid item>
             {" "}
-            <Box>
+            <Box sx={{ width: "148px" }}>
               <MultiSelect
                 options={matrixType}
                 className={classes.Select}
@@ -395,11 +494,11 @@ const Salutation = () => {
                 value={matrixTypeValue}
                 labelledBy="matrix type"
                 overrideStrings={{
-                  selectSomeItems: "Select Matrix Type",
+                  selectSomeItems: "Select Matrix",
                 }}
               />
             </Box>
-          </Grid> */}
+          </Grid>
         </Grid>
       </Grid>
       <Grid item lg={3}>
@@ -414,10 +513,10 @@ const Salutation = () => {
           </Button>
         </Grid>
       </Grid>
-      <Grid item>
+      <Grid item lg={12} xl={12}>
         <Divider sx={{ marginTop: "16px", marginBottom: "32px" }} />
-        <Grid container spacing={2} sx={{ marginBottom: "32px" }}>
-          <Grid item xs={12}>
+        <Grid container sx={{ marginBottom: "32px" }}>
+          <Grid item lg={12} xl={12}>
             <StatusBanner />
           </Grid>
         </Grid>
@@ -431,16 +530,22 @@ const Salutation = () => {
           <Button
             variant="outlined"
             className={classes.button}
-            startIcon={<AddIcon />}
+            startIcon={<AddIcon sx={{ color: "#0070C0" }} />}
           >
             Add Salutation
           </Button>
         </Stack>
         <Grid container spacing={2}>
-          <Grid item lg={4} xl={3}>
-            <CircularProgressWithLabel value={10} />
-          </Grid>
-          <Grid item lg={4} xl={3}>
+          {SalutationData &&
+            SalutationData.Call_Opening.map((item) => {
+              return (
+                <Grid item lg={4} xl={4}>
+                  <CircularProgressWithLabel value={item} />
+                </Grid>
+              );
+            })}
+
+          {/* <Grid item lg={4} xl={3}>
             <CircularProgressWithLabel value={20} />
           </Grid>
           <Grid item lg={4} xl={3}>
@@ -457,7 +562,7 @@ const Salutation = () => {
           </Grid>
           <Grid item lg={4} xl={3}>
             <CircularProgressWithLabel value={90} />
-          </Grid>
+          </Grid> */}
         </Grid>
         <Divider sx={{ marginTop: "16px", marginBottom: "32px" }} />
         <Stack
@@ -470,13 +575,21 @@ const Salutation = () => {
           <Button
             variant="outlined"
             className={classes.button}
-            startIcon={<AddIcon />}
+            startIcon={<AddIcon sx={{ color: "#0070C0" }} />}
           >
             Add Salutation
           </Button>
         </Stack>
         <Grid container spacing={2}>
-          <Grid item lg={4} xl={3}>
+          {SalutationData &&
+            SalutationData.customer_authentication.map((item) => {
+              return (
+                <Grid item lg={4} xl={4}>
+                  <CircularProgressWithLabel value={item} />
+                </Grid>
+              );
+            })}
+          {/* <Grid item lg={4} xl={3}>
             <CircularProgressWithLabel value={10} />
           </Grid>
           <Grid item lg={4} xl={3}>
@@ -496,7 +609,7 @@ const Salutation = () => {
           </Grid>
           <Grid item lg={4} xl={3}>
             <CircularProgressWithLabel value={90} />
-          </Grid>
+          </Grid> */}
         </Grid>
         <Divider sx={{ marginTop: "16px", marginBottom: "32px" }} />
         <Stack
@@ -509,13 +622,21 @@ const Salutation = () => {
           <Button
             variant="outlined"
             className={classes.button}
-            startIcon={<AddIcon />}
+            startIcon={<AddIcon sx={{ color: "#0070C0" }} />}
           >
             Add Salutation
           </Button>
         </Stack>
         <Grid container spacing={2}>
-          <Grid item lg={4} xl={3}>
+          {SalutationData &&
+            SalutationData.on_hold.map((item) => {
+              return (
+                <Grid item lg={4} xl={4}>
+                  <CircularProgressWithLabel value={item} />
+                </Grid>
+              );
+            })}
+          {/* <Grid item lg={4} xl={3}>
             <CircularProgressWithLabel value={10} />
           </Grid>
           <Grid item lg={4} xl={3}>
@@ -535,23 +656,24 @@ const Salutation = () => {
           </Grid>
           <Grid item lg={4} xl={3}>
             <CircularProgressWithLabel value={90} />
-          </Grid>
+          </Grid> */}
         </Grid>
-        <Divider sx={{ marginTop: "16px", marginBottom: "32px" }} />
-        <Grid container spacing={2}>
+        {/* <Divider sx={{ marginTop: "16px", marginBottom: "32px" }} /> */}
+        {/* <Grid container spacing={2}>
           <Grid item xs={6}>
             <QualificationCard />
           </Grid>
           <Grid item xs={6}>
             <QualificationCard />
           </Grid>
-        </Grid>
+        </Grid> */}
       </Grid>
     </Grid>
   );
 };
 
 function CircularProgressWithLabel(props) {
+  console.log(props);
   return (
     <Card sx={{ boxShadow: 0, backgroundColor: "#F5F5F5" }}>
       <CardContent sx={{ pb: "16px !important" }}>
@@ -562,10 +684,7 @@ function CircularProgressWithLabel(props) {
           alignItems="center"
         >
           <Grid item xs={8}>
-            <Typography variant="subtitle1">
-              Hello, I am Denis Godhani , Hello, I am Denis Godhani, Hello, I am
-              Denis Godhani
-            </Typography>
+            <Typography variant="subtitle1">{props.value.key}</Typography>
           </Grid>
           <Grid item xs={2}>
             <Box
@@ -577,8 +696,14 @@ function CircularProgressWithLabel(props) {
               }}
             >
               <CircularProgressbar
-                value={props.value}
-                text={`${props.value}%`}
+                value={props.value.value}
+                text={`${props.value.value}%`}
+                styles={buildStyles({
+                  pathColor: props.value.color,
+                  textColor: "#000000",
+                  trailColor: "#d6d6d6",
+                  backgroundColor: "#3e98c7",
+                })}
               />
             </Box>
           </Grid>
@@ -723,6 +848,9 @@ const useStyles = makeStyles((theme) =>
       fontSize: "14px",
       lineHeight: "20px",
       padding: "8px 16px",
+      "&:hover": {
+        background: "#E6F1F9",
+      },
     },
     dateInput: {
       backgroundColor: "#ECEFF1",
@@ -756,6 +884,8 @@ const useStyles = makeStyles((theme) =>
     dateRange: {
       "& .rs-picker-toggle.rs-btn.rs-btn-default": {
         backgroundColor: "#ECEFF1",
+        width: "148px",
+        padding: "10px",
       },
       "& span.rs-picker-toggle-placeholder": {
         color: "#212121",
@@ -771,6 +901,7 @@ const useStyles = makeStyles((theme) =>
       fontWeight: "normal",
       fontSize: "14px",
       lineHeight: "20px",
+      borderRadius: "4px",
       "& .dropdown-container": {
         "& .gray": {
           color: "#212121",
@@ -789,7 +920,7 @@ const useStyles = makeStyles((theme) =>
         borderWidth: "0px",
       },
       "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-        border: "none",
+        border: "0px",
       },
     },
   })

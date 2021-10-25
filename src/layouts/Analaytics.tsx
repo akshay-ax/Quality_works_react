@@ -22,6 +22,7 @@ import { MultiSelect } from "react-multi-select-component";
 import moment from "moment";
 import { DateRangePicker } from "rsuite";
 import "rsuite/dist/rsuite.min.css";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 import {
   ColumnDirective,
@@ -38,6 +39,17 @@ import {
   Page,
   Sort,
 } from "@syncfusion/ej2-react-grids";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchAnalaticsdata,
+  fetchAnalaticsdataOnAgent,
+  fetchAnalaticsdataOnLob,
+  fetchAnalaticsdataOnMatrixtype,
+  fetchAnalaticsdataOnTeam,
+  storedata,
+} from "../store/actions/actionCreators";
+import { NavLink, useHistory } from "react-router-dom";
+import AnalayticService from "../Services/Analatics/Agents.service";
 
 let coloum = [
   {
@@ -51,6 +63,10 @@ let coloum = [
   },
 ];
 const Analaytics = () => {
+  // const analayticData = useSelector((state: any) => state?.data);
+  // console.log(analayticData);
+  const history = useHistory();
+  const dispatch = useDispatch();
   const instance = <DateRangePicker />;
   const classes = useStyles();
   const [startDate, setStartDate] = useState<any>();
@@ -78,40 +94,33 @@ const Analaytics = () => {
   const filterSettings: FilterSettingsModel = { type: "CheckBox" };
 
   useEffect(() => {
-    authFetch("http://192.168.1.3:8000/api/lob/")
-      .then((res) => res.json())
-      .then((res) => setLob(res.data));
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      // body: JSON.stringify({ id: e.target.value }),
-    };
-    authFetch("http://192.168.1.3:8000/elastic/allfilter/", requestOptions)
-      .then((res) => res.json())
-      .then((res) => setDataSource(res.data));
-    authFetch("http://192.168.1.3:8000/api/reporting/")
-      .then((res) => res.json())
-      .then((res) => setMatrixType(res.data));
+    // dispatch(fetchAnalaticsdata());
+
+    AnalayticService.getAllLob().then((res) => setLob(res.data));
+    AnalayticService.getAllFilter().then((res) => setDataSource(res.data));
+    AnalayticService.getAllMatrixType().then((res) => setMatrixType(res.data));
   }, []);
 
+  const customValueRenderer = (selected, _options) => {
+    return selected.length
+      ? selected.map(({ label }) => "✔️ " + label)
+      : "😶 No Items Selected";
+  };
+
   const handleChangelob = (e: SelectChangeEvent) => {
+    console.log(e);
+    setLobvalue(e);
     console.log(e.target.value);
     if (e?.target?.value !== "") {
       setLobvalue(e?.target?.value);
-      const requestOptions = {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: e.target.value }),
-      };
-      authFetch("http://192.168.1.3:8000/api/showteam/", requestOptions)
-        .then((res) => res.json())
-        .then((res) => {
-          setTeam(res.data as Array<any>);
-          setTeamvalue([]);
-          setAgentvalue([]);
-          setAgent([]);
-          setShowAgentCol(false);
-        });
+
+      AnalayticService.teamDataShow(e.target.value).then((res) => {
+        setTeam(res.data as Array<any>);
+        setTeamvalue([]);
+        setAgentvalue([]);
+        setAgent([]);
+        setShowAgentCol(false);
+      });
     } else {
       setLobvalue([]);
       setTeamvalue([]);
@@ -120,7 +129,10 @@ const Analaytics = () => {
       setShowAgentCol(false);
       setAgent([]);
     }
+
     if (startDate && endDate !== "Invalid date" && e?.target?.value !== "") {
+      const lobId = e.target.value;
+      // dispatch(fetchAnalaticsdataOnLob(startDate, endDate, lobId));
       const dateRequestOptions = {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -130,17 +142,19 @@ const Analaytics = () => {
           Lob_id: e.target.value,
         }),
       };
-      authFetch(
-        "http://192.168.1.3:8000/elastic/allfilter/",
-        dateRequestOptions
-      )
-        .then((res) => res.json())
-        .then((res) => {
-          setDataSource(res.data);
-          setShowAgentCol(false);
-        });
+
+      AnalayticService.getAllFilterOnLob(
+        startDate,
+        endDate,
+        e.target.value
+      ).then((res) => {
+        setDataSource(res.data);
+        setShowAgentCol(false);
+      });
     }
     if (!startDate && !endDate && e?.target?.value !== "") {
+      const lobId = e.target.value;
+      // dispatch(fetchAnalaticsdataOnLob(startDate, endDate, lobId));
       // setStartDate(moment(new Date()).format("YYYY-MM-DD"));
       // setEndDate(moment(new Date()).subtract(6, "months").format("YYYY-MM-DD"));
       // console.log(startDate);
@@ -154,15 +168,10 @@ const Analaytics = () => {
           Lob_id: e.target.value,
         }),
       };
-      authFetch(
-        "http://192.168.1.3:8000/elastic/allfilter/",
-        dateRequestOptions
-      )
-        .then((res) => res.json())
-        .then((res) => {
-          setShowAgentCol(false);
-          setDataSource(res.data);
-        });
+      AnalayticService.getAllFilterOnLob(e.target.value).then((res) => {
+        setShowAgentCol(false);
+        setDataSource(res.data);
+      });
     }
   };
 
@@ -175,6 +184,16 @@ const Analaytics = () => {
     });
     console.log(typeof agentsId);
     if (agentsId) {
+      dispatch(
+        fetchAnalaticsdataOnAgent(
+          startDate,
+          endDate,
+          MatrixListId,
+          agentsId,
+          Teamlist,
+          lobvalue
+        )
+      );
       setAgentlist(agentsId);
       console.log(event);
       const requestTeamsOptions = {
@@ -189,18 +208,21 @@ const Analaytics = () => {
           end_date: endDate,
         }),
       };
-      authFetch(
-        "http://192.168.1.3:8000/elastic/allfilter/",
-        requestTeamsOptions
-      )
-        .then((res) => res.json())
-        .then((res) => {
-          console.log(res.data);
-          // setDataSource([]);
-          setShowAgentCol(true);
-          setDataSource(res.data);
-          // grid.dataSource.unshift(res.data);
-        });
+
+      AnalayticService.getAllFilterOnAgent(
+        MatrixListId,
+        agentsId,
+        Teamlist,
+        lobvalue,
+        startDate,
+        endDate
+      ).then((res) => {
+        console.log(res.data);
+        // setDataSource([]);
+        setShowAgentCol(true);
+        setDataSource(res.data);
+        // grid.dataSource.unshift(res.data);
+      });
     } else {
       setAgentvalue([]);
     }
@@ -218,45 +240,55 @@ const Analaytics = () => {
     setTeamlist(teamsId);
     console.log(typeof teamsId);
     if (teamsId) {
-      const requestTeamsOptions = {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          Matrix_list: MatrixListId,
-          Agent_list: Agentlist,
-          Team_list: teamsId,
-          Lob_id: lobvalue,
-          start_date: startDate,
-          end_date: endDate,
-        }),
-      };
-      authFetch(
-        "http://192.168.1.3:8000/elastic/allfilter/",
-        requestTeamsOptions
-      )
-        .then((res) => res.json())
-        .then((res) => {
-          console.log(res.data);
-          setDataSource(res.data);
-          setShowAgentCol(false);
-        });
-      const requestAgentsOptions = {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: teamsId }),
-      };
-      authFetch("http://192.168.1.3:8000/api/showagent/", requestAgentsOptions)
-        .then((res) => res.json())
-        .then((res) => {
-          // let agentlist: Array<object> = [];
-          // // res.data.forEach((item) => {
-          // //   agentlist.push({ label: item.Agent_name, value: item.Agent_id });
-          // // });
-          setAgentvalue([]);
-          setAgent([]);
-          setShowAgentCol(false);
-          setAgent(res.data);
-        });
+      // dispatch(
+      //   fetchAnalaticsdataOnTeam(
+      //     startDate,
+      //     endDate,
+      //     MatrixListId,
+      //     teamsId,
+      //     Agentlist,
+      //     lobvalue
+      //   )
+      // );
+      // const requestTeamsOptions = {
+      //   method: "POST",
+      //   headers: { "Content-Type": "application/json" },
+      //   body: JSON.stringify({
+      //     Matrix_list: MatrixListId,
+      //     Agent_list: Agentlist,
+      //     Team_list: teamsId,
+      //     Lob_id: lobvalue,
+      //     start_date: startDate,
+      //     end_date: endDate,
+      //   }),
+      // };
+
+      AnalayticService.getAllFilterOnTeam(
+        Agentlist,
+        teamsId,
+        lobvalue,
+        startDate,
+        endDate,
+        MatrixListId
+      ).then((res) => {
+        console.log(res.data);
+        setDataSource(res.data);
+      });
+      // const requestAgentsOptions = {
+      //   method: "POST",
+      //   headers: { "Content-Type": "application/json" },
+      //   body: JSON.stringify({ id: teamsId }),
+      // };
+      AnalayticService.agentDataShow(teamsId).then((res) => {
+        // let agentlist: Array<object> = [];
+        // // res.data.forEach((item) => {
+        // //   agentlist.push({ label: item.Agent_name, value: item.Agent_id });
+        // // });
+        setAgentvalue([]);
+        setAgent([]);
+        setShowAgentCol(false);
+        setAgent(res.data);
+      });
     } else {
       setTeamvalue([]);
       setAgentvalue([]);
@@ -278,25 +310,25 @@ const Analaytics = () => {
 
     console.log(startDate, endDate !== "Invalid date");
     if (s_Date == e_Date) {
-      const dateRequestOptions = {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          start_date: null,
-          end_date: null,
-          Matrix_list: MatrixListId,
-          Agent_list: Agentlist,
-          Team_list: Teamlist,
-        }),
-      };
-      authFetch(
-        "http://192.168.1.3:8000/elastic/allfilter/",
-        dateRequestOptions
-      )
-        .then((res) => res.json())
-        .then((res) => {
-          setDataSource(res.data);
-        });
+      // const dateRequestOptions = {
+      //   method: "POST",
+      //   headers: { "Content-Type": "application/json" },
+      //   body: JSON.stringify({
+      //     start_date: null,
+      //     end_date: null,
+      //     Matrix_list: MatrixListId,
+      //     Agent_list: Agentlist,
+      //     Team_list: Teamlist,
+      //   }),
+      // };
+
+      AnalayticService.getAllFilterOnDateRange(
+        MatrixListId,
+        Agentlist,
+        Teamlist
+      ).then((res) => {
+        setDataSource(res.data);
+      });
     } else {
       setStartDate(s_Date);
       setEndDate(e_Date);
@@ -311,9 +343,12 @@ const Analaytics = () => {
           Team_list: Teamlist,
         }),
       };
-      authFetch(
-        "http://192.168.1.3:8000/elastic/allfilter/",
-        dateRequestOptions
+      AnalayticService.getAllFilterOnDateRange(
+        MatrixListId,
+        Agentlist,
+        Teamlist,
+        s_Date,
+        e_Date
       )
         .then((res) => res.json())
         .then((res) => {
@@ -330,39 +365,72 @@ const Analaytics = () => {
       matrixListId.push(item.value);
     });
     if (matrixListId) {
+      console.log(matrixListId);
+      // dispatch(
+      //   fetchAnalaticsdataOnMatrixtype(
+      //     startDate,
+      //     endDate,
+      //     matrixListId,
+      //     Agentlist,
+      //     Teamlist,
+      //     lobvalue
+      //   )
+      // );
       setMatrixListId(matrixListId);
-      const requestTeamsOptions = {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          Matrix_list: matrixListId,
-          Agent_list: Agentlist,
-          Team_list: Teamlist,
-          start_date: startDate,
-          end_date: endDate,
-        }),
-      };
-      authFetch(
-        "http://192.168.1.3:8000/elastic/allfilter/",
-        requestTeamsOptions
-      )
-        .then((res) => res.json())
-        .then((res) => {
-          setDataSource(res.data);
-          console.log(res.data);
-        });
+      // const requestTeamsOptions = {
+      //   method: "POST",
+      //   headers: { "Content-Type": "application/json" },
+      //   body: JSON.stringify({
+      //     Lob_id: lobvalue,
+      //     Matrix_list: matrixListId,
+      //     Agent_list: Agentlist,
+      //     Team_list: Teamlist,
+      //     start_date: startDate,
+      //     end_date: endDate,
+      //   }),
+      // };
+
+      AnalayticService.getAllFilterOnMatrixType(
+        lobvalue,
+        matrixListId,
+        Agentlist,
+        Teamlist,
+        startDate,
+        endDate
+      ).then((res) => {
+        setDataSource(res.data);
+        console.log(res.data);
+      });
     } else {
     }
   };
 
-  const view = (props) => {
-    console.log(props);
+  const view = (props: any) => {
+    // console.log(props);
+    const handleNavigate = (
+      e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
+    ): void => {
+      // if (!item.enabled) e.preventDefault();
+      console.log(e);
+    };
+
     return (
       <>
         {props["CQ SCORES"]}
-        <Button variant="outlined" sx={{ float: "right" }}>
+        {/* <NavLink to={`analaytic/agent/salutation`} onClick={handleNavigate}> */}
+        <Button
+          onClick={(e) => {
+            e.preventDefault();
+            history.push("analaytic/agent/salutation");
+            dispatch(storedata(props));
+            console.log("onClick", props);
+          }}
+          variant="outlined"
+          sx={{ float: "right", border: "0px", color: "#0070C0" }}
+        >
           view
         </Button>
+        {/* </NavLink> */}
       </>
     );
   };
@@ -381,16 +449,39 @@ const Analaytics = () => {
             <Grid item>
               <DateRangePicker
                 format="yyyy-MM-dd"
+                placeholder="Select Date"
                 onChange={daterange}
                 className={classes.dateRange}
               />
             </Grid>
             <Grid item>
               <FormControl sx={{ minWidth: 120 }}>
+                {/* <MultiSelect
+                  options={lob}
+                  onChange={handleChangelob}
+                  value={lobvalue}
+                  className={classes.Select}
+                  labelledBy="Lob"
+                  hasSelectAll={false}
+                  // valueRenderer={customValueRenderer}
+                  overrideStrings={{
+                    allItemsAreSelected: "All items are selected.",
+                    clearSearch: "Clear Search",
+                    noOptions: "No options",
+                    search: "Search",
+                    selectAll: "Select All",
+                    selectAllFiltered: "Select All (Filtered)",
+                    selectSomeItems: "Select Lob",
+                  }}
+                /> */}
                 <Select
                   value={lobvalue}
                   onChange={handleChangelob}
+                  sx={{ width: "148.77px" }}
                   displayEmpty
+                  IconComponent={(_props) => (
+                    <KeyboardArrowDownIcon sx={{ mr: 1 }} />
+                  )}
                   disableUnderline={true}
                   className={classes.Select}
                   inputProps={{
@@ -415,7 +506,7 @@ const Analaytics = () => {
             </Grid>
             <Grid item>
               {" "}
-              <Box sx={{ width: "130px" }}>
+              <Box sx={{ width: "148px" }}>
                 <MultiSelect
                   options={team}
                   onChange={handleChangeteam}
@@ -436,7 +527,7 @@ const Analaytics = () => {
             </Grid>
             <Grid item>
               {" "}
-              <Box sx={{ width: "130px" }}>
+              <Box sx={{ width: "148px" }}>
                 <MultiSelect
                   options={agent}
                   className={classes.Select}
@@ -451,7 +542,7 @@ const Analaytics = () => {
             </Grid>
             <Grid item>
               {" "}
-              <Box sx={{ width: "158.44px" }}>
+              <Box sx={{ width: "148px" }}>
                 <MultiSelect
                   options={matrixType}
                   className={classes.Select}
@@ -459,7 +550,7 @@ const Analaytics = () => {
                   value={matrixTypeValue}
                   labelledBy="matrix type"
                   overrideStrings={{
-                    selectSomeItems: "Select Matrix Type",
+                    selectSomeItems: "Select Matrix",
                   }}
                 />
               </Box>
@@ -488,14 +579,14 @@ const Analaytics = () => {
             allowSorting={true}
           >
             <ColumnsDirective>
-              {dataSource.att_array &&
+              {dataSource?.att_array &&
                 dataSource.att_array.map((item) => {
                   if (item === "CQ SCORES") {
                     return (
                       <ColumnDirective
                         field={item}
                         headerText={item}
-                        width="100%"
+                        width="159.5px"
                         template={view}
                       />
                     );
@@ -558,6 +649,8 @@ const useStyles = makeStyles((theme) =>
     dateRange: {
       "& .rs-picker-toggle.rs-btn.rs-btn-default": {
         backgroundColor: "#ECEFF1",
+        width: "148px",
+        padding: "10px",
       },
       "& span.rs-picker-toggle-placeholder": {
         color: "#212121",
@@ -596,6 +689,9 @@ const useStyles = makeStyles((theme) =>
       },
     },
     th: {
+      "& .e-pagercontainer": {
+        float: "right",
+      },
       "&.e-grid": {
         border: "0px",
       },
@@ -603,10 +699,14 @@ const useStyles = makeStyles((theme) =>
         border: "0px",
       },
       "&.e-grid .e-headercell": {
+        fontFamily: "Roboto",
+        fontSize: "16px",
+        padding: "12px 12px 12px 24px",
         borderBottom: "1px solid rgba(0, 0, 0, 0.1)",
         backgroundColor: "#EEEEEE",
       },
       "&.e-grid .e-headertext": {
+        color: "#212121",
         fontFamily: "Roboto",
         fontStyle: "normal",
         fontWeight: 500,

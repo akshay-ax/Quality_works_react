@@ -1,13 +1,16 @@
 import * as actionTypes from "../actions/actionTypes";
 
 const initialState: any = {
-  data: [],
+  data: {},
 };
 
-const Analayticsreducer = (state = initialState, { type, payload }) => {
+const FilterReducer = (
+  state = initialState,
+  { type, payload }
+): ArticleState => {
   console.log(type, payload);
   switch (type) {
-    case actionTypes.FETCH_ANALATIC_DATA:
+    case actionTypes.SET_FILTER_DATA:
       return {
         ...state,
         data: payload,
@@ -16,4 +19,4 @@ const Analayticsreducer = (state = initialState, { type, payload }) => {
   return state;
 };
 
-export default Analayticsreducer;
+export default FilterReducer;

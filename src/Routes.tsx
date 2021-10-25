@@ -91,6 +91,13 @@ const routes: Array<RouteItem> = [
         title: "salutation",
         component: Salutation,
       },
+      // {
+      //   path: "/analaytic/agent/csat",
+      //   key: "router-csat",
+      //   enabled: true,
+      //   title: "CSAT",
+      //   component: Csat,
+      // },
       {
         path: "/analaytic/agent/softskills",
         key: "router-softskills",

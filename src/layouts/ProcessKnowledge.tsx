@@ -9,14 +9,44 @@ import {
   Typography,
 } from "@mui/material";
 import { createStyles, makeStyles } from "@mui/styles";
-import React, { PureComponent } from "react";
+import React, { PureComponent, useEffect, useState } from "react";
 import HighchartsReact from "highcharts-react-official";
 import Highcharts from "highcharts";
 import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
 import { padding } from "@mui/system";
+import { authFetch } from "../provider/AuthProvider";
+import { useSelector } from "react-redux";
+import AnalayticService from "../Services/Analatics/Agents.service";
 
 function ProcessKnowledge() {
+  const storeData = useSelector((state: any) => state?.FilterReducer?.data);
   const classes = useStyles();
+  const [dataSource, setDataSource] = useState<any>({});
+
+  useEffect(() => {
+    // const dateRequestOptions = {
+    //   method: "POST",
+    //   headers: { "Content-Type": "application/json" },
+    //   body: JSON.stringify({
+    //     Agent_id: storeData.Agent_id,
+    //     Team_id: storeData.Team_id,
+    //     Lob_id: storeData.LOB_id,
+    //   }),
+    // };
+    // authFetch(
+    //   "http://192.168.1.3:8000/elastic/process_knowledge/",
+    //   dateRequestOptions
+    // )
+    //   .then((res) => res.json())
+    AnalayticService.ProcessKnowledgeData(
+      storeData.Agent_id,
+      storeData.Team_id,
+      storeData.LOB_id
+    ).then((res) => {
+      setDataSource(res.data);
+      console.log(res.data);
+    });
+  }, []);
 
   return (
     <div>
@@ -85,23 +115,29 @@ function ProcessKnowledge() {
           <Typography variant="h4">Information</Typography>
           <Grid container>
             <Grid item xs={12}>
-              <Box className={classes.chart} sx={{ mt: 1 }}>
-                <Information />
+              <Box
+                className={classes.chart}
+                sx={{ mt: 1, pt: 5, pl: 5, pr: 5 }}
+              >
+                <Information value={dataSource} />
               </Box>
             </Grid>
           </Grid>
-          <Typography variant="h4" sx={{ mt: 3 }}>
-            Asssistance
+          <Typography variant="h4" sx={{ mt: 5 }}>
+            Assistance
           </Typography>
           <Grid container sx={{ mt: 0.5 }} spacing={2}>
             <Grid item xs={6}>
               <Box className={classes.chart}>
-                <Tagging />
+                <Tagging value={dataSource} />
               </Box>
             </Grid>
             <Grid item xs={6}>
-              <Box className={classes.chart}>
-                <CallTransferRate />
+              <Box
+                className={classes.chart}
+                sx={{ padding: "23px 25px 15px 25px" }}
+              >
+                <CallTransferRate value={dataSource} />
               </Box>
             </Grid>
           </Grid>
@@ -114,17 +150,17 @@ function ProcessKnowledge() {
                 <Typography variant="h5" sx={{ p: 2 }}>
                   Troubleshooting
                 </Typography>
-                <ProgressCircleCharts />
+                <ProgressCircleCharts value={dataSource} />
               </Box>
             </Grid>
             <Grid item xs={6}>
               {/* <Box className={classes.chart}>
                 <Box sx={{ display: "flex", alignItems: "center" }}>
-                  <Typography sx={{ width: "200px" }}>Plan Details:</Typography>
-                  <Box sx={{ width: "100%", mr: 1 }}>
-                    <LinearProgress variant="determinate" value={30} />
+                  <Typography sx={{ width: "200px" pl:2 }}>Plan Details:</Typography>
+                  <Box sx={{ width: "100%", mr: ,pr:2 }}>
+                    <LinearProgress  value={30} />
                   </Box>
-                  <Box sx={{ minWidth: 35 }}>
+                  <Box sx={{ minWidth: 35, mr:2 }}>
                     <Typography
                       variant="body2"
                       color="text.secondary"
@@ -170,7 +206,7 @@ const ProgressCircleCharts = (props) => {
       },
     },
     subtitle: {
-      text: `<div style='font-size: 40px'>65%</div> Fixed issues`,
+      text: `<div style='font-size: 40px'>${props.value.Troubleshooting}%</div> Fixed issues`,
       align: "center",
       verticalAlign: "middle",
       style: {
@@ -195,17 +231,17 @@ const ProgressCircleCharts = (props) => {
         data: [
           {
             name: "Fixed",
-            y: 65,
+            y: props.value.Troubleshooting,
             color: "#4CC57E",
           },
           {
             name: "Pandding",
-            y: 25,
+            y: (100 - props.value.Troubleshooting) / 2,
             color: "#F8DA77",
           },
           {
             name: "Not Fixed",
-            y: 10,
+            y: (100 - props.value.Troubleshooting) / 2,
             color: "#D65654",
           },
         ],
@@ -220,11 +256,18 @@ const ProgressCircleCharts = (props) => {
   );
 };
 
-const Information = () => {
+const Information = (props) => {
   const classes = useStyles();
   const opts = {
     chart: {
       type: "bar",
+      height: "300px",
+      // events: {
+      //   load() {
+      //     showLoading("Simulating Ajax ...");
+      //     setTimeout(hideLoading(), 2000);
+      //   },
+      // },
     },
     title: {
       text: "",
@@ -240,6 +283,16 @@ const Information = () => {
     },
     xAxis: {
       type: "category",
+      labels: {
+        y: -8,
+        style: {
+          fontFamily: "Roboto",
+          fontStyle: "normal",
+          fontWeight: "normal",
+          fontSize: "14px",
+          color: "#616161",
+        },
+      },
     },
     yAxis: {
       min: 0,
@@ -249,7 +302,7 @@ const Information = () => {
         format: "{value}%",
       },
       title: {
-        text: "Total percent market share",
+        text: "",
       },
     },
     legend: {
@@ -257,6 +310,7 @@ const Information = () => {
     },
     plotOptions: {
       series: {
+        pointWidth: 40,
         borderWidth: 0,
         dataLabels: {
           enabled: true,
@@ -274,22 +328,27 @@ const Information = () => {
     series: [
       {
         name: "High",
-        colorByPoint: true,
+        color: "#4CC57E",
         data: [
           {
             name: "Accuracy",
-            y: 60,
+            y: props.value["Information accuracy"],
+            color: props.value["Information accuracy_color"],
           },
           {
             name: "Critical Miss",
-            y: 30,
+            y: props.value["Critical miss"],
+            color: props.value["Critical miss_color"],
           },
           {
             name: "Non-Critical Miss",
-            y: 20,
+            y: props.value["Non-critical miss"],
+            color: props.value["Non-critical miss_color"],
           },
         ],
       },
+      { name: "Medium", color: "#F8DA77" },
+      { name: "Low", color: "#D65654" },
     ],
   };
   return (
@@ -299,79 +358,246 @@ const Information = () => {
   );
 };
 
-const Tagging = () => {
+const Tagging = (props) => {
   return (
     <div>
       <Typography variant="h5" sx={{ p: 2 }}>
         Taging
       </Typography>
       <Divider></Divider>
-      <Box sx={{ width: "100%", p: 2 }}>
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          <Typography sx={{ width: "200px" }}>deactivation:</Typography>
-          <Box sx={{ width: "100%", mr: 1 }}>
-            <LinearProgress variant="determinate" value={72} />
-          </Box>
-          <Box sx={{ minWidth: 35 }}>
-            <Typography variant="body2" color="text.secondary">{`${Math.round(
-              72
-            )}%`}</Typography>
-          </Box>
-        </Box>
-      </Box>
-      <Divider></Divider>
-      <Box sx={{ width: "100%", p: 2 }}>
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          <Typography sx={{ width: "200px" }}>Plan Details:</Typography>
-          <Box sx={{ width: "100%", mr: 1 }}>
-            <LinearProgress variant="determinate" value={30} />
-          </Box>
-          <Box sx={{ minWidth: 35 }}>
-            <Typography variant="body2" color="text.secondary">{`${Math.round(
-              30
-            )}%`}</Typography>
-          </Box>
-        </Box>
-      </Box>
-      <Divider></Divider>
-      <Box sx={{ width: "100%", p: 2 }}>
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          <Typography sx={{ width: "200px" }}>PORT:</Typography>
-          <Box sx={{ width: "100%", mr: 1 }}>
-            <LinearProgress variant="determinate" value={80} />
-          </Box>
-          <Box sx={{ minWidth: 35 }}>
-            <Typography variant="body2" color="text.secondary">{`${Math.round(
-              80
-            )}%`}</Typography>
+      <Box sx={{ height: "384px", overflowY: "scroll" }}>
+        <Box sx={{ width: "100%", p: 2 }}>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Typography sx={{ width: "200px", pl: 2 }}>Deactivation</Typography>
+            <Box sx={{ width: "100%", mr: 1, pr: 2 }}>
+              <LinearProgress
+                sx={{
+                  height: "8px",
+                  borderRadius: "8px",
+                  backgroundColor: "#ECEFF1",
+                  "& .MuiLinearProgress-bar": {
+                    borderRadius: "8px",
+                    backgroundColor: props.value.Deactivation_color,
+                  },
+                }}
+                variant="determinate"
+                value={props.value.Deactivation}
+              />
+            </Box>
+            <Box sx={{ minWidth: 35, mr: 2 }}>
+              <Typography variant="body2" color="text.secondary">{`${Math.round(
+                props.value.Deactivation
+              )}%`}</Typography>
+            </Box>
           </Box>
         </Box>
-      </Box>
-      <Divider></Divider>
-      <Box sx={{ width: "100%", p: 2 }}>
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          <Typography sx={{ width: "200px" }}>Signal:</Typography>
-          <Box sx={{ width: "100%", mr: 1 }}>
-            <LinearProgress variant="determinate" value={20} />
-          </Box>
-          <Box sx={{ minWidth: 35 }}>
-            <Typography variant="body2" color="text.secondary">{`${Math.round(
-              20
-            )}%`}</Typography>
+        <Divider></Divider>
+        <Box sx={{ width: "100%", p: 2 }}>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Typography sx={{ width: "200px", pl: 2 }}>Plan Details</Typography>
+            <Box sx={{ width: "100%", mr: 1, pr: 2 }}>
+              <LinearProgress
+                sx={{
+                  height: "8px",
+                  color: props.value.Deactivation_color,
+                  borderRadius: "8px",
+                  backgroundColor: "#ECEFF1",
+                  "& .MuiLinearProgress-bar": {
+                    backgroundColor: props.value["Plan Details_color"],
+                    borderRadius: "8px",
+                  },
+                }}
+                variant="determinate"
+                value={props.value["Plan Details"]}
+              />
+            </Box>
+            <Box sx={{ minWidth: 35, mr: 2 }}>
+              <Typography variant="body2" color="text.secondary">{`${Math.round(
+                props.value["Plan Details"]
+              )}%`}</Typography>
+            </Box>
           </Box>
         </Box>
-      </Box>
-      <Divider></Divider>
-      <Box sx={{ width: "100%", p: 2 }}>
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          <Typography sx={{ width: "200px" }}>Activate:</Typography>
-          <Box sx={{ width: "100%", mr: 1 }}>
-            <LinearProgress variant="determinate" value={90} />
+        <Divider></Divider>
+        <Box sx={{ width: "100%", p: 2 }}>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Typography sx={{ width: "200px", pl: 2 }}>PORT</Typography>
+            <Box sx={{ width: "100%", mr: 1, pr: 2 }}>
+              <LinearProgress
+                sx={{
+                  height: "8px",
+                  backgroundColor: "#ECEFF1",
+                  borderRadius: "8px",
+                  "& .MuiLinearProgress-bar": {
+                    borderRadius: "8px",
+                    backgroundColor: props.value.PORT_color,
+                  },
+                }}
+                variant="determinate"
+                value={props.value.PORT}
+              />
+            </Box>
+            <Box sx={{ minWidth: 35, mr: 2 }}>
+              <Typography variant="body2" color="text.secondary">{`${Math.round(
+                props.value.PORT
+              )}%`}</Typography>
+            </Box>
           </Box>
-          <Box sx={{ minWidth: 35 }}>
-            <Typography variant="body2" color="text.secondary">{`${Math.round(
-              90
-            )}%`}</Typography>
+        </Box>
+        <Divider></Divider>
+        <Box sx={{ width: "100%", p: 2 }}>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Typography sx={{ width: "200px", pl: 2 }}>Signal</Typography>
+            <Box sx={{ width: "100%", mr: 1, pr: 2 }}>
+              <LinearProgress
+                sx={{
+                  height: "8px",
+                  backgroundColor: "#ECEFF1",
+                  borderRadius: "8px",
+                  "& .MuiLinearProgress-bar": {
+                    borderRadius: "8px",
+                    backgroundColor: props.value.Signal_color,
+                  },
+                }}
+                variant="determinate"
+                value={props.value.Signal}
+              />
+            </Box>
+            <Box sx={{ minWidth: 35, mr: 2 }}>
+              <Typography variant="body2" color="text.secondary">{`${Math.round(
+                props.value.Signal
+              )}%`}</Typography>
+            </Box>
+          </Box>
+        </Box>
+        <Divider></Divider>
+        <Box sx={{ width: "100%", p: 2 }}>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Typography sx={{ width: "200px", pl: 2 }}>Activate</Typography>
+            <Box sx={{ width: "100%", mr: 1, pr: 2 }}>
+              <LinearProgress
+                sx={{
+                  height: "8px",
+                  backgroundColor: "#ECEFF1",
+                  borderRadius: "8px",
+                  "& .MuiLinearProgress-bar": {
+                    backgroundColor: props.value.Activate_color,
+                    borderRadius: "8px",
+                  },
+                }}
+                variant="determinate"
+                value={props.value.Activate}
+              />
+            </Box>
+            <Box sx={{ minWidth: 35, mr: 2 }}>
+              <Typography variant="body2" color="text.secondary">{`${Math.round(
+                props.value.Activate
+              )}%`}</Typography>
+            </Box>
+          </Box>
+        </Box>
+        <Divider></Divider>
+        <Box sx={{ width: "100%", p: 2 }}>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Typography sx={{ width: "200px", pl: 2 }}>Activate</Typography>
+            <Box sx={{ width: "100%", mr: 1, pr: 2 }}>
+              <LinearProgress
+                sx={{
+                  height: "8px",
+                  backgroundColor: "#ECEFF1",
+                  borderRadius: "8px",
+                  "& .MuiLinearProgress-bar": {
+                    backgroundColor: props.value.Activate_color,
+                    borderRadius: "8px",
+                  },
+                }}
+                variant="determinate"
+                value={props.value.Activate}
+              />
+            </Box>
+            <Box sx={{ minWidth: 35, mr: 2 }}>
+              <Typography variant="body2" color="text.secondary">{`${Math.round(
+                props.value.Activate
+              )}%`}</Typography>
+            </Box>
+          </Box>
+        </Box>
+        <Divider></Divider>
+        <Box sx={{ width: "100%", p: 2 }}>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Typography sx={{ width: "200px", pl: 2 }}>Activate</Typography>
+            <Box sx={{ width: "100%", mr: 1, pr: 2 }}>
+              <LinearProgress
+                sx={{
+                  height: "8px",
+                  backgroundColor: "#ECEFF1",
+                  borderRadius: "8px",
+                  "& .MuiLinearProgress-bar": {
+                    backgroundColor: props.value.Activate_color,
+                    borderRadius: "8px",
+                  },
+                }}
+                variant="determinate"
+                value={props.value.Activate}
+              />
+            </Box>
+            <Box sx={{ minWidth: 35, mr: 2 }}>
+              <Typography variant="body2" color="text.secondary">{`${Math.round(
+                props.value.Activate
+              )}%`}</Typography>
+            </Box>
+          </Box>
+        </Box>
+        <Divider></Divider>
+        <Box sx={{ width: "100%", p: 2 }}>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Typography sx={{ width: "200px", pl: 2 }}>Activate</Typography>
+            <Box sx={{ width: "100%", mr: 1, pr: 2 }}>
+              <LinearProgress
+                sx={{
+                  height: "8px",
+                  backgroundColor: "#ECEFF1",
+                  borderRadius: "8px",
+                  "& .MuiLinearProgress-bar": {
+                    backgroundColor: props.value.Activate_color,
+                    borderRadius: "8px",
+                  },
+                }}
+                variant="determinate"
+                value={props.value.Activate}
+              />
+            </Box>
+            <Box sx={{ minWidth: 35, mr: 2 }}>
+              <Typography variant="body2" color="text.secondary">{`${Math.round(
+                props.value.Activate
+              )}%`}</Typography>
+            </Box>
+          </Box>
+        </Box>
+        <Divider></Divider>
+        <Box sx={{ width: "100%", p: 2 }}>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Typography sx={{ width: "200px", pl: 2 }}>Activate</Typography>
+            <Box sx={{ width: "100%", mr: 1, pr: 2 }}>
+              <LinearProgress
+                sx={{
+                  height: "8px",
+                  backgroundColor: "#ECEFF1",
+                  borderRadius: "8px",
+                  "& .MuiLinearProgress-bar": {
+                    backgroundColor: props.value.Activate_color,
+                    borderRadius: "8px",
+                  },
+                }}
+                variant="determinate"
+                value={props.value.Activate}
+              />
+            </Box>
+            <Box sx={{ minWidth: 35, mr: 2 }}>
+              <Typography variant="body2" color="text.secondary">{`${Math.round(
+                props.value.Activate
+              )}%`}</Typography>
+            </Box>
           </Box>
         </Box>
       </Box>
@@ -379,28 +605,33 @@ const Tagging = () => {
   );
 };
 
-const CallTransferRate = () => {
+const CallTransferRate = (props) => {
   const opts = {
     chart: {
+      type: "area",
       // title: "Rate of Speech",
     },
     title: {
+      margin: 34,
       text: "Call Transfer Rate",
       align: "left",
-      fontFamily: "Roboto",
-      fontStyle: "normal",
-      // font-weight: 500;
-      fontSize: "16px",
+      style: {
+        fontFamily: "Roboto",
+        fontWeight: "bold",
+        color: "#212121",
+      },
       // line-height: 24px;
     },
     xAxis: {
       title: {
-        text: "Date",
+        text: "days",
       },
       type: "datetime",
-      tickInterval: 1000 * 3600 * 24 * 30,
     },
     yAxis: {
+      title: {
+        text: "",
+      },
       min: 0,
       max: 100,
       tickInterval: 20,
@@ -416,6 +647,8 @@ const CallTransferRate = () => {
         fillColor: "#D6F5D6",
       },
       series: {
+        lineWidth: 3,
+        fillOpacity: 0.5,
         marker: {
           enabled: false,
           radius: 2,
@@ -432,14 +665,18 @@ const CallTransferRate = () => {
         },
       },
     },
-
     series: [
       {
-        name: "Max Volume",
-        data: [
-          29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1,
-          95.6, 54.4,
-        ],
+        name: `Avg Call Transfer Rate: ${48}%`,
+        data: props.value.call_transfer_rate,
+        pointStart: Date.UTC(2021, 0, 1),
+        pointInterval: 6 * 3600 * 10000,
+        marker: { symbol: "triangle" },
+        color: "#4CC57E",
+        // marker: {
+        //   enabled: true,
+        //   symbol: "triangle",
+        // },
       },
     ],
   };

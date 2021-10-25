@@ -13,6 +13,7 @@ import LinearProgress from "@mui/material/LinearProgress";
 import ReactWordcloud from "react-wordcloud";
 import HighchartsReact from "highcharts-react-official";
 import Highcharts from "highcharts";
+import { MultiSelectComponent } from "@syncfusion/ej2-react-dropdowns";
 
 const Item = styled(Paper)(({ theme }) => ({
   padding: "1px",
@@ -21,6 +22,29 @@ const Item = styled(Paper)(({ theme }) => ({
 
 const Keywords = () => {
   const classes = useStyles();
+
+  const keyWordTrendsData: any = [
+    "Badminton",
+    "Cricket",
+    "Football",
+    "Golf",
+    "Tennis",
+    "Badminton",
+    "Cricket",
+    "Football",
+    "Golf",
+    "Tennis",
+    "Badminton",
+    "Cricket",
+    "Football",
+    "Golf",
+    "Tennis",
+    "Badminton",
+    "Cricket",
+    "Football",
+    "Golf",
+    "Tennis",
+  ];
 
   return (
     <div>
@@ -109,6 +133,11 @@ const Keywords = () => {
               <Typography sx={{ mb: 2 }} variant="h5">
                 Keyword Trend
               </Typography>
+              <MultiSelectComponent
+                id="mtselement"
+                dataSource={keyWordTrendsData}
+                placeholder="Select a game"
+              />
               <KeywordTrend />
             </Box>
           </Grid>
@@ -324,6 +353,11 @@ const KeywordTrend = () => {
         "Dec",
       ],
     },
+    yAxis: {
+      title: {
+        text: "",
+      },
+    },
     plotOptions: {
       series: {
         lineWidth: 3,
@@ -386,7 +420,7 @@ const KeywordCount = () => {
       <Divider></Divider>
       <Box sx={{ width: "100%", p: 2 }}>
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <Typography sx={{ width: "200px" }}>transaction Fail:</Typography>
+          <Typography sx={{ width: "200px" }}>Transaction Fail</Typography>
           <Box sx={{ width: "100%", mr: 1 }}>
             <LinearProgress variant="determinate" value={72} />
           </Box>
@@ -400,7 +434,7 @@ const KeywordCount = () => {
       <Divider></Divider>
       <Box sx={{ width: "100%", p: 2 }}>
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <Typography sx={{ width: "200px" }}>UPI:</Typography>
+          <Typography sx={{ width: "200px" }}>UPI</Typography>
           <Box sx={{ width: "100%", mr: 1 }}>
             <LinearProgress variant="determinate" value={30} />
           </Box>
@@ -414,7 +448,7 @@ const KeywordCount = () => {
       <Divider></Divider>
       <Box sx={{ width: "100%", p: 2 }}>
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <Typography sx={{ width: "200px" }}>Fail:</Typography>
+          <Typography sx={{ width: "200px" }}>Fail</Typography>
           <Box sx={{ width: "100%", mr: 1 }}>
             <LinearProgress variant="determinate" value={80} />
           </Box>
@@ -428,7 +462,7 @@ const KeywordCount = () => {
       <Divider></Divider>
       <Box sx={{ width: "100%", p: 2 }}>
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <Typography sx={{ width: "200px" }}>SBI:</Typography>
+          <Typography sx={{ width: "200px" }}>SBI</Typography>
           <Box sx={{ width: "100%", mr: 1 }}>
             <LinearProgress variant="determinate" value={20} />
           </Box>
@@ -442,7 +476,7 @@ const KeywordCount = () => {
       <Divider></Divider>
       <Box sx={{ width: "100%", p: 2 }}>
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <Typography sx={{ width: "200px" }}>PhonePE:</Typography>
+          <Typography sx={{ width: "200px" }}>PhonePE</Typography>
           <Box sx={{ width: "100%", mr: 1 }}>
             <LinearProgress variant="determinate" value={90} />
           </Box>

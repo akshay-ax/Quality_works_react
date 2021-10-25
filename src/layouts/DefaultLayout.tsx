@@ -150,7 +150,8 @@ const Search = styled("div")(({ theme }) => ({
 }));
 
 const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(0, 2),
+  padding: theme.spacing(0, 44),
+  color: "rgba(0, 0, 0, 0.38)",
   height: "100%",
   position: "absolute",
   pointerEvents: "none",
@@ -160,14 +161,13 @@ const SearchIconWrapper = styled("div")(({ theme }) => ({
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: "black",
   "& .MuiInputBase-input": {
     padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    paddingLeft: `calc(2px + ${theme.spacing(1)})`,
     transition: theme.transitions.create("width"),
     width: "100%",
     [theme.breakpoints.up("sm")]: {
-      width: "35ch",
+      width: "375px",
     },
   },
 }));
@@ -196,8 +196,8 @@ const DefaultLayout = ({ children, ...rest }) => {
       depth: 1,
       items: [
         {
-          title: "Quality",
-          path: "/quality",
+          title: "CSAT",
+          path: "/csat",
           Icon: SyncIcon,
           depth: 3,
         },
@@ -216,13 +216,13 @@ const DefaultLayout = ({ children, ...rest }) => {
           depth: 3,
           items: [
             {
-              title: "Quality",
-              path: "/agent/quality",
+              title: "CSAT",
+              path: "/agent/csat",
               depth: 3.5,
             },
             {
               depth: 3.5,
-              title: "Saturation",
+              title: "Salutation",
               path: "/agent/salutation",
             },
             {
@@ -342,7 +342,7 @@ const DefaultLayout = ({ children, ...rest }) => {
             onClick={handleDrawerState}
             edge="start"
             sx={{
-              marginRight: "36px",
+              marginRight: "12px",
             }}
           >
             <MenuIcon />
@@ -355,7 +355,7 @@ const DefaultLayout = ({ children, ...rest }) => {
 
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
-            <Box mt="5px" mr="30px">
+            <Box mt="5px" mr="50px">
               <Search sx={{ background: "#ECEFF1" }}>
                 <SearchIconWrapper>
                   <SearchIcon />
@@ -368,13 +368,15 @@ const DefaultLayout = ({ children, ...rest }) => {
             </Box>
             <IconButton size="large" aria-label="show 17 new notifications">
               <Badge color="error">
-                <NotificationsIcon />
+                <NotificationsIcon sx={{ color: "rgba(0, 0, 0, 0.6)" }} />
               </Badge>
             </IconButton>
-            <IconButton>
-              <HelpOutlineIcon />
-            </IconButton>
-            <Divider orientation="vertical" variant="middle" flexItem />
+            <Divider
+              sx={{ color: "rgba(0, 0, 0, 0.6)" }}
+              orientation="vertical"
+              variant="middle"
+              flexItem
+            />
             <IconButton
               size="large"
               edge="end"
@@ -383,7 +385,7 @@ const DefaultLayout = ({ children, ...rest }) => {
               aria-haspopup="true"
               onClick={handleProfileMenuOpen}
             >
-              <AccountCircle />
+              <AccountCircle sx={{ color: "rgba(0, 0, 0, 0.6)" }} />
             </IconButton>
           </Box>
         </Toolbar>
