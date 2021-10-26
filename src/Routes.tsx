@@ -8,6 +8,7 @@ import ProcessKnowledge from "./layouts/ProcessKnowledge";
 import Salutation from "./layouts/Salutation";
 import Sentiment from "./layouts/Sentiment";
 import SoftSkills from "./layouts/SoftSkills";
+import SopConfiguration from "./layouts/SopConfiguration";
 import Voice from "./layouts/Voice";
 import Home from "./views/dashboard/Home";
 import Login from "./views/pages/login/Login";
@@ -63,6 +64,13 @@ const routes: Array<RouteItem> = [
     component: Dashboard,
   },
   // { path: "/", element: <Navigate to="/analaytics" /> },
+  {
+    path: "/sopconfiguration",
+    enabled: true,
+    title: "SOP Configuration",
+    key: "router-sopconfiguration",
+    component: SopConfiguration,
+  },
   {
     path: "/analaytic",
     enabled: true,

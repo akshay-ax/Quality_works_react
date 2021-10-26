@@ -29,6 +29,7 @@ import AppMenuItem from "./AppMenu";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import SettingsIcon from "@mui/icons-material/Settings";
 import SyncIcon from "@mui/icons-material/Sync";
+import AutorenewIcon from "@mui/icons-material/Autorenew";
 import AcUnitIcon from "@mui/icons-material/AcUnit";
 import ShowChartIcon from "@mui/icons-material/ShowChart";
 import NotificationsIcon from "@mui/icons-material/Notifications";
@@ -281,6 +282,20 @@ const DefaultLayout = ({ children, ...rest }) => {
       title: "Evoluation",
       path: "/evoluation",
       Icon: VisibilityIcon,
+      depth: 1,
+      items: [
+        {
+          title: "Quelity",
+          path: "/quelity",
+          Icon: SyncIcon,
+          depth: 3,
+        },
+      ],
+    },
+    {
+      title: "SOP Configuration",
+      path: "/sopconfiguration",
+      Icon: AutorenewIcon,
       depth: 1,
       items: [
         {
