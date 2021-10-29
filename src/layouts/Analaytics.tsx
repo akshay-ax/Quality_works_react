@@ -23,11 +23,11 @@ import moment from "moment";
 import { DateRangePicker } from "rsuite";
 import "rsuite/dist/rsuite.min.css";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-
+import FadeLoader from "react-spinners/FadeLoader";
+import { css } from "@emotion/react";
 import {
   ColumnDirective,
   ColumnMenu,
-  ColumnModel,
   ColumnsDirective,
   Edit,
   Filter,
@@ -62,6 +62,13 @@ let coloum = [
     name: "Soft Skills",
   },
 ];
+
+const override = css`
+  display: block;
+  margin: 0 auto;
+  border-color: red;
+`;
+
 const Analaytics = () => {
   // const analayticData = useSelector((state: any) => state?.data);
   // console.log(analayticData);
@@ -89,6 +96,8 @@ const Analaytics = () => {
   const [team, setTeam] = useState<any[]>([]);
   const [agent, setAgent] = useState<any[]>([]);
   const [dataSource, setDataSource] = useState<any>({});
+  let [loading, setLoading] = useState<boolean>(true);
+  let [color, setColor] = useState("#D65654");
 
   const groupOptions: GroupSettingsModel = { showGroupedColumn: true };
   const filterSettings: FilterSettingsModel = { type: "CheckBox" };
@@ -97,7 +106,10 @@ const Analaytics = () => {
     // dispatch(fetchAnalaticsdata());
 
     AnalayticService.getAllLob().then((res) => setLob(res.data));
-    AnalayticService.getAllFilter().then((res) => setDataSource(res.data));
+    AnalayticService.getAllFilter().then((res) => {
+      setDataSource(res.data);
+      setLoading(false);
+    });
     AnalayticService.getAllMatrixType().then((res) => setMatrixType(res.data));
   }, []);
 
@@ -144,9 +156,9 @@ const Analaytics = () => {
       };
 
       AnalayticService.getAllFilterOnLob(
+        e.target.value,
         startDate,
-        endDate,
-        e.target.value
+        endDate
       ).then((res) => {
         setDataSource(res.data);
         setShowAgentCol(false);
@@ -349,11 +361,9 @@ const Analaytics = () => {
         Teamlist,
         s_Date,
         e_Date
-      )
-        .then((res) => res.json())
-        .then((res) => {
-          setDataSource(res.data);
-        });
+      ).then((res) => {
+        setDataSource(res.data);
+      });
     }
     // setValue(newValue)
   };
@@ -422,7 +432,7 @@ const Analaytics = () => {
           onClick={(e) => {
             e.preventDefault();
             history.push("analaytic/agent/salutation");
-            dispatch(storedata(props));
+            // dispatch(storedata(props));
             console.log("onClick", props);
           }}
           variant="outlined"
@@ -568,44 +578,54 @@ const Analaytics = () => {
             </Button>
           </Grid>
         </Grid>
-        <Grid item>
-          <Divider sx={{ marginTop: "16px", marginBottom: "32px" }} />
-          <GridComponent
-            dataSource={dataSource?.data}
-            allowPaging={true}
-            className={classes.th}
-            dataSourceChanged={handleRefresh}
-            dataBound={dataBound}
-            allowSorting={true}
-          >
-            <ColumnsDirective>
-              {dataSource?.att_array &&
-                dataSource.att_array.map((item) => {
-                  if (item === "CQ SCORES") {
-                    return (
-                      <ColumnDirective
-                        field={item}
-                        headerText={item}
-                        width="159.5px"
-                        template={view}
-                      />
-                    );
-                  } else {
-                    return (
-                      <ColumnDirective
-                        field={item}
-                        headerText={item}
-                        width="100%"
-                      />
-                    );
-                  }
-                })}
-            </ColumnsDirective>
-            <Inject services={[Sort, ColumnMenu, Filter, Page, Group, Edit]} />
-          </GridComponent>
+        {loading ? (
+          <Grid item sx={{ width: "100%" }}>
+            <Divider sx={{ marginTop: "16px", marginBottom: "32px" }} />
+            <FadeLoader color={color} loading={loading} css={override} />
+            <Divider sx={{ marginTop: "16px", marginBottom: "32px" }} />
+          </Grid>
+        ) : (
+          <Grid item>
+            <Divider sx={{ marginTop: "16px", marginBottom: "32px" }} />
+            <GridComponent
+              dataSource={dataSource?.data}
+              allowPaging={true}
+              className={classes.th}
+              dataSourceChanged={handleRefresh}
+              dataBound={dataBound}
+              allowSorting={true}
+            >
+              <ColumnsDirective>
+                {dataSource?.att_array &&
+                  dataSource.att_array.map((item) => {
+                    if (item === "CQ SCORES") {
+                      return (
+                        <ColumnDirective
+                          field={item}
+                          headerText={item}
+                          width="159.5px"
+                          template={view}
+                        />
+                      );
+                    } else {
+                      return (
+                        <ColumnDirective
+                          field={item}
+                          headerText={item}
+                          width="100%"
+                        />
+                      );
+                    }
+                  })}
+              </ColumnsDirective>
+              <Inject
+                services={[Sort, ColumnMenu, Filter, Page, Group, Edit]}
+              />
+            </GridComponent>
 
-          <Divider sx={{ marginTop: "16px", marginBottom: "32px" }} />
-        </Grid>
+            <Divider sx={{ marginTop: "16px", marginBottom: "32px" }} />
+          </Grid>
+        )}
       </Grid>
     </div>
   );
@@ -640,6 +660,7 @@ const useStyles = makeStyles((theme) =>
       height: "40px",
     },
     MenuItem: {
+      width: "149px",
       color: "#212121",
       height: "40px",
       fontWeight: "normal",

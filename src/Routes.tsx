@@ -4,12 +4,17 @@ import CallClosure from "./layouts/CallClosure";
 import Dashboard from "./layouts/Dashboard";
 import DefaultLayout from "./layouts/DefaultLayout";
 import Keywords from "./layouts/Keywords";
+import Lobs from "./layouts/Lobs";
+import Locations from "./layouts/Locations";
 import ProcessKnowledge from "./layouts/ProcessKnowledge";
 import Salutation from "./layouts/Salutation";
 import Sentiment from "./layouts/Sentiment";
 import SoftSkills from "./layouts/SoftSkills";
 import SopConfiguration from "./layouts/SopConfiguration";
+import TeamManagement from "./layouts/TeamManagement";
+import Teams from "./layouts/Teams";
 import Voice from "./layouts/Voice";
+import Workspace from "./layouts/Workspace";
 import Home from "./views/dashboard/Home";
 import Login from "./views/pages/login/Login";
 import Page404 from "./views/pages/page404/Page404";
@@ -70,6 +75,43 @@ const routes: Array<RouteItem> = [
     title: "SOP Configuration",
     key: "router-sopconfiguration",
     component: SopConfiguration,
+  },
+  {
+    path: "/teammanagement",
+    enabled: true,
+    title: "SOP Configuration",
+    key: "router-teammanagement",
+    component: TeamManagement,
+    subRoutes: [
+      {
+        path: "/teammanagement/workspace",
+        key: "router-workspace",
+        enabled: true,
+        title: "workspace",
+        component: Workspace,
+      },
+      {
+        path: "/teammanagement/location",
+        key: "router-salutation",
+        enabled: true,
+        title: "location",
+        component: Locations,
+      },
+      {
+        path: "/teammanagement/lobs",
+        key: "router-lobs",
+        enabled: true,
+        title: "lobs",
+        component: Lobs,
+      },
+      {
+        path: "/teammanagement/teams",
+        key: "router-teams",
+        enabled: true,
+        title: "teams",
+        component: Teams,
+      },
+    ],
   },
   {
     path: "/analaytic",

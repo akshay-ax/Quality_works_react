@@ -94,33 +94,17 @@ const Salutation = () => {
   // }, []);
 
   useEffect(() => {
-    authFetch("http://192.168.1.3:8000/api/lob/")
-      .then((res) => res.json())
-      .then((res) => setLob(res.data));
-
-    authFetch("http://192.168.1.3:8000/api/soptypes/")
-      .then((res) => res.json())
-      .then((res) => setSop(res.data));
-    // const requestOptions = {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify({
-    //     Agent_id: storeData.Agent_id,
-    //     Team_id: storeData.Team_id,
-    //     Lob_id: storeData.LOB_id,
-    //   }),
-    // };
-    // authFetch("http://192.168.1.3:8000/elastic/salutation/", requestOptions)
-    //   .then((res) => res.json())
+    console.log(storeData);
+    AnalayticService.getAllLob().then((res) => setLob(res.data));
     AnalayticService.SalutationData(
-      storeData.LOB_id,
-      storeData.Team_id,
-      storeData.Agent_id
+      storeData?.LOB_id,
+      storeData?.Team_id,
+      storeData?.Agent_id
     ).then((res) => {
       setSalutationData(res.data);
       console.log(res.data);
     });
-  }, []);
+  }, [storeData]);
 
   const handleChangelob = (e: SelectChangeEvent) => {
     console.log(e);
@@ -536,14 +520,13 @@ const Salutation = () => {
           </Button>
         </Stack>
         <Grid container spacing={2}>
-          {SalutationData &&
-            SalutationData.Call_Opening.map((item) => {
-              return (
-                <Grid item lg={4} xl={4}>
-                  <CircularProgressWithLabel value={item} />
-                </Grid>
-              );
-            })}
+          {SalutationData?.Call_Opening?.map((item) => {
+            return (
+              <Grid item lg={4} xl={4}>
+                <CircularProgressWithLabel value={item} />
+              </Grid>
+            );
+          })}
 
           {/* <Grid item lg={4} xl={3}>
             <CircularProgressWithLabel value={20} />
@@ -581,14 +564,13 @@ const Salutation = () => {
           </Button>
         </Stack>
         <Grid container spacing={2}>
-          {SalutationData &&
-            SalutationData.customer_authentication.map((item) => {
-              return (
-                <Grid item lg={4} xl={4}>
-                  <CircularProgressWithLabel value={item} />
-                </Grid>
-              );
-            })}
+          {SalutationData?.customer_authentication?.map((item) => {
+            return (
+              <Grid item lg={4} xl={4}>
+                <CircularProgressWithLabel value={item} />
+              </Grid>
+            );
+          })}
           {/* <Grid item lg={4} xl={3}>
             <CircularProgressWithLabel value={10} />
           </Grid>
@@ -628,14 +610,13 @@ const Salutation = () => {
           </Button>
         </Stack>
         <Grid container spacing={2}>
-          {SalutationData &&
-            SalutationData.on_hold.map((item) => {
-              return (
-                <Grid item lg={4} xl={4}>
-                  <CircularProgressWithLabel value={item} />
-                </Grid>
-              );
-            })}
+          {SalutationData?.on_hold?.map((item) => {
+            return (
+              <Grid item lg={4} xl={4}>
+                <CircularProgressWithLabel value={item} />
+              </Grid>
+            );
+          })}
           {/* <Grid item lg={4} xl={3}>
             <CircularProgressWithLabel value={10} />
           </Grid>

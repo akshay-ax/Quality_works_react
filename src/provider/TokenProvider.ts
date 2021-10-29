@@ -27,7 +27,7 @@ const createTokenProvider = () => {
 
     if (isExpired(getExpirationDate(_token.accessToken))) {
       const updatedToken = await fetch(
-        "http://3.227.180.10:80/api/refresh_token/",
+        "http://192.168.1.3:8000/api/refresh_token/",
         {
           method: "GET",
           credentials: "include",

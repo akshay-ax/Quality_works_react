@@ -37,7 +37,7 @@ const Login: FunctionComponent = ({ children }) => {
   } = useForm<LoginInputs>();
   const onSubmit: SubmitHandler<LoginInputs> = (data) => {
     console.log(data);
-    fetch("http://44.199.168.156:80/api/login/", {
+    fetch("http://192.168.1.3:8000/api/login/", {
       method: "POST",
       body: JSON.stringify(data),
       headers: {

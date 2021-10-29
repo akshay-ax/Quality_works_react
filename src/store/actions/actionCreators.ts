@@ -8,7 +8,7 @@ export const fetchAnalaticsdata = () => async (dispatch) => {
     // body: JSON.stringify({ id: e.target.value }),
   };
   const response = await authFetch(
-    "http://3.227.180.10:80/elastic/allfilter/",
+    "http://192.168.1.3:8000/elastic/allfilter/",
     requestOptions
   ).then((res) => res.json());
 
@@ -28,7 +28,7 @@ export const fetchAnalaticsdataOnLob =
       }),
     };
     const response = await authFetch(
-      "http://3.227.180.10:80/elastic/allfilter/",
+      "http://192.168.1.3:8000/elastic/allfilter/",
       requestOptions
     ).then((res) => res.json());
 
@@ -58,7 +58,7 @@ export const fetchAnalaticsdataOnTeam =
       }),
     };
     const response = await authFetch(
-      "http://3.227.180.10:80/elastic/allfilter/",
+      "http://192.168.1.3:8000/elastic/allfilter/",
       requestOptions
     ).then((res) => res.json());
 
@@ -91,7 +91,7 @@ export const fetchAnalaticsdataOnAgent =
       }),
     };
     const response = await authFetch(
-      "http://3.227.180.10:80/elastic/allfilter/",
+      "http://192.168.1.3:8000/elastic/allfilter/",
       requestOptions
     ).then((res) => res.json());
 
@@ -124,7 +124,7 @@ export const fetchAnalaticsdataOnMatrixtype =
       }),
     };
     const response = await authFetch(
-      "http://3.227.180.10:80/elastic/allfilter/",
+      "http://192.168.1.3:8000/elastic/allfilter/",
       requestOptions
     ).then((res) => res.json());
 
@@ -144,28 +144,3 @@ export const fetchAnalaticsdataOnMatrixtype =
 export const storedata = (props) => async (dispatch) => {
   dispatch({ type: actionTypes.SET_FILTER_DATA, payload: props });
 };
-
-export function addArticle(article: IArticle) {
-  const action: ArticleAction = {
-    type: actionTypes.ADD_ARTICLE,
-    article,
-  };
-
-  return simulateHttpRequest(action);
-}
-
-export function removeArticle(article: IArticle) {
-  const action: ArticleAction = {
-    type: actionTypes.REMOVE_ARTICLE,
-    article,
-  };
-  return simulateHttpRequest(action);
-}
-
-export function simulateHttpRequest(action: ArticleAction) {
-  return (dispatch: DispatchType) => {
-    setTimeout(() => {
-      dispatch(action);
-    }, 500);
-  };
-}

@@ -17,7 +17,14 @@ import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 
-import { Badge, Grid, ImageList, InputBase } from "@mui/material";
+import {
+  Badge,
+  Grid,
+  ImageList,
+  InputBase,
+  SvgIcon,
+  SvgIconProps,
+} from "@mui/material";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import SupportAgentIcon from "@mui/icons-material/SupportAgent";
@@ -44,6 +51,7 @@ import Analaytics from "./Analaytics";
 import SoftSkills from "./SoftSkills";
 import Dashboard from "./Dashboard";
 import { ComponentType, FC } from "react";
+import vector from "../../src/asserts/images/Vector.svg";
 
 const drawerWidth = 240;
 
@@ -172,6 +180,15 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
   },
 }));
+
+function TeamManagementIcon(props: SvgIconProps) {
+  return (
+    <SvgIcon {...props}>
+      <path d="M20 8V0H13V3H7V0H0V8H7V5H9V15H13V18H20V10H13V13H11V5H13V8H20ZM5 6H2V2H5V6ZM15 12H18V16H15V12ZM15 2H18V6H15V2Z" />
+    </SvgIcon>
+  );
+}
+
 const DefaultLayout = ({ children, ...rest }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const classes = useStyles();
@@ -212,67 +229,67 @@ const DefaultLayout = ({ children, ...rest }) => {
       items: [
         {
           title: "Agent",
-          path: "/agent",
+          path: "/analaytic/agent",
           Icon: SupportAgentIcon,
           depth: 3,
           items: [
             {
               title: "CSAT",
-              path: "/agent/csat",
+              path: "/analaytic/agent/csat",
               depth: 3.5,
             },
             {
               depth: 3.5,
               title: "Salutation",
-              path: "/agent/salutation",
+              path: "/analaytic/agent/salutation",
             },
             {
               depth: 3.5,
               title: "Soft Skills",
-              path: "/agent/softSkills",
+              path: "/analaytic/agent/softSkills",
             },
             {
               depth: 3.5,
               title: "Progress Knowledge",
-              path: "/agent/processknowledge",
+              path: "/analaytic/agent/processknowledge",
             },
             {
               depth: 3.5,
               title: "Call Closer",
-              path: "/agent/callclosure",
+              path: "/analaytic/agent/callclosure",
             },
             {
               depth: 3.5,
               title: "Voice",
-              path: "/agent/voice",
+              path: "/analaytic/agent/voice",
             },
             {
               depth: 3.5,
               title: "Sentiment",
-              path: "/agent/sentiment",
+              path: "/analaytic/agent/sentiment",
             },
           ],
         },
         {
           depth: 3,
           title: "Customer",
-          path: "/customer",
+          path: "/analaytic/customer",
           Icon: AccountCircleIcon,
           items: [
             {
               depth: 3.5,
               title: "Sentiment",
-              path: "/customer/sentiment",
+              path: "/analaytic/customer/sentiment",
             },
             {
               depth: 3.5,
               title: "TalkTime",
-              path: "/customer/talkTime",
+              path: "/analaytic/customer/talkTime",
             },
             {
               depth: 3.5,
               title: "Keywords",
-              path: "/customer/keywords",
+              path: "/analaytic/customer/keywords",
             },
           ],
         },
@@ -285,8 +302,8 @@ const DefaultLayout = ({ children, ...rest }) => {
       depth: 1,
       items: [
         {
-          title: "Quelity",
-          path: "/quelity",
+          title: "Quality",
+          path: "/quality",
           Icon: SyncIcon,
           depth: 3,
         },
@@ -299,10 +316,42 @@ const DefaultLayout = ({ children, ...rest }) => {
       depth: 1,
       items: [
         {
-          title: "Quelity",
-          path: "/quelity",
+          title: "Quality",
+          path: "/quality",
           Icon: SyncIcon,
           depth: 3,
+        },
+      ],
+    },
+    {
+      title: "Team Management",
+      path: "/teammanagement",
+      Icon: TeamManagementIcon,
+      depth: 1,
+      items: [
+        {
+          title: "Workspace",
+          path: "/teammanagement/workspace",
+
+          depth: 3.5,
+        },
+        {
+          title: "Location",
+          path: "/teammanagement/location",
+
+          depth: 3.5,
+        },
+        {
+          title: "Lobs",
+          path: "/teammanagement/lobs",
+
+          depth: 3.5,
+        },
+        {
+          title: "Teams",
+          path: "/teammanagement/teams",
+
+          depth: 3.5,
         },
       ],
     },
@@ -313,8 +362,8 @@ const DefaultLayout = ({ children, ...rest }) => {
       depth: 1,
       items: [
         {
-          title: "Quelity",
-          path: "/quelity",
+          title: "Quality",
+          path: "/quality",
           Icon: SyncIcon,
           depth: 3,
         },
@@ -327,9 +376,9 @@ const DefaultLayout = ({ children, ...rest }) => {
       depth: 1,
       items: [
         {
-          title: "Quelity",
+          title: "Quality",
           Icon: SyncIcon,
-          path: "/quelity",
+          path: "/quality",
           depth: 3,
         },
       ],

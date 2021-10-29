@@ -1,20 +1,20 @@
 import { authFetch } from "../../provider/AuthProvider";
 
 const getAllLob = () => {
-  return authFetch("http://44.199.168.156:80/api/lob/").then((res) =>
+  return authFetch("http://192.168.1.3:8000/api/lob/").then((res) =>
     res.json()
   );
 };
 
 const getAllFilter = () => {
-  return authFetch("http://44.199.168.156:80/elastic/allfilter/", {
+  return authFetch("http://192.168.1.3:8000/elastic/allfilter/", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
   }).then((res) => res.json());
 };
 
 const getAllFilterOnLob = (lobid?, startDate?, endDate?) => {
-  return authFetch("http://44.199.168.156:80/elastic/allfilter/", {
+  return authFetch("http://192.168.1.3:8000/elastic/allfilter/", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -33,7 +33,7 @@ const getAllFilterOnAgent = (
   startDate?,
   endDate?
 ) => {
-  return authFetch("http://44.199.168.156:80/elastic/allfilter/", {
+  return authFetch("http://192.168.1.3:8000/elastic/allfilter/", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -55,7 +55,7 @@ const getAllFilterOnTeam = (
   endDate?,
   MatrixListId?
 ) => {
-  return authFetch("http://44.199.168.156:80/elastic/allfilter/", {
+  return authFetch("http://192.168.1.3:8000/elastic/allfilter/", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -76,7 +76,7 @@ const getAllFilterOnDateRange = (
   s_Date?,
   e_Date?
 ) => {
-  return authFetch("http://44.199.168.156:80/elastic/allfilter/", {
+  return authFetch("http://192.168.1.3:8000/elastic/allfilter/", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -97,7 +97,7 @@ const getAllFilterOnMatrixType = (
   startDate?,
   endDate?
 ) => {
-  return authFetch("http://44.199.168.156:80/elastic/allfilter/", {
+  return authFetch("http://192.168.1.3:8000/elastic/allfilter/", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -112,13 +112,13 @@ const getAllFilterOnMatrixType = (
 };
 
 const getAllMatrixType = () => {
-  return authFetch("http://44.199.168.156:80/api/reporting/").then((res) =>
+  return authFetch("http://192.168.1.3:8000/api/reporting/").then((res) =>
     res.json()
   );
 };
 
 const teamDataShow = (lobid) => {
-  return authFetch("http://44.199.168.156:80/api/showteam/", {
+  return authFetch("http://192.168.1.3:8000/api/showteam/", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ id: lobid }),
@@ -126,7 +126,7 @@ const teamDataShow = (lobid) => {
 };
 
 const agentDataShow = (teamid) => {
-  return authFetch("http://44.199.168.156:80/api/showagent/", {
+  return authFetch("http://192.168.1.3:8000/api/showagent/", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ id: teamid }),
@@ -134,7 +134,7 @@ const agentDataShow = (teamid) => {
 };
 
 const CallCloserData = (agentId?, teamId?, lobId?) => {
-  return authFetch("http://44.199.168.156:80/elastic/callclosure/", {
+  return authFetch("http://192.168.1.3:8000/elastic/callclosure/", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -146,7 +146,7 @@ const CallCloserData = (agentId?, teamId?, lobId?) => {
 };
 
 const ProcessKnowledgeData = (agentId?, teamId?, lobId?) => {
-  return authFetch("http://44.199.168.156:80/elastic/process_knowledge/", {
+  return authFetch("http://192.168.1.3:8000/elastic/process_knowledge/", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -158,19 +158,19 @@ const ProcessKnowledgeData = (agentId?, teamId?, lobId?) => {
 };
 
 const SalutationData = (agentId?, teamId?, lobId?) => {
-  return authFetch("http://44.199.168.156:80/elastic/salutation/", {
+  return authFetch("http://192.168.1.3:8000/elastic/salutation/", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      Agent_id: agentId,
-      Team_id: teamId,
       Lob_id: lobId,
+      Team_id: teamId,
+      Agent_id: agentId,
     }),
   }).then((res) => res.json());
 };
 
 const SantimentData = (agentId?, teamId?, lobId?) => {
-  return authFetch("http://44.199.168.156:80/elastic/sentiment/", {
+  return authFetch("http://192.168.1.3:8000/elastic/sentiment/", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -182,7 +182,7 @@ const SantimentData = (agentId?, teamId?, lobId?) => {
 };
 
 const SoftSkillData = (agentId?, teamId?, lobId?) => {
-  return authFetch("http://44.199.168.156:80/elastic/sentiment/", {
+  return authFetch("http://192.168.1.3:8000/elastic/softskill/", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -193,7 +193,7 @@ const SoftSkillData = (agentId?, teamId?, lobId?) => {
   }).then((res) => res.json());
 };
 // const getAllLob = () => {
-//     return authFetch("http://44.199.168.156:80/api/lob/").then((res) =>
+//     return authFetch("http://192.168.1.3:8000/api/lob/").then((res) =>
 //       res.json()
 //     );
 //   };

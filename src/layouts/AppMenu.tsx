@@ -198,7 +198,7 @@ const AppMenuItem: React.FC<AppMenuItemProps> = (props) => {
       <List component="div" disablePadding>
         {items.map((item, index) => (
           <NavLink
-            to={`/analaytic${item.path}`}
+            to={`${item.path}`}
             className={classes.active}
             onClick={handleNavigate}
           >
