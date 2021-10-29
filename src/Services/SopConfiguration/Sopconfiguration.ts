@@ -1,13 +1,12 @@
 import { authFetch } from "../../provider/AuthProvider";
+const api_base_url = process.env.REACT_APP_API_BASE_URL;
 
 const getSopConfigData = () => {
-  return authFetch("http://192.168.1.3:8000/api/soptypes/").then((res) =>
-    res.json()
-  );
+  return authFetch(`${api_base_url}/api/soptypes/`).then((res) => res.json());
 };
 
 const addSubSop = (sopId, title) => {
-  return authFetch("http://192.168.1.3:8000/api/subsop/", {
+  return authFetch(`${api_base_url}/api/subsop/`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -18,7 +17,7 @@ const addSubSop = (sopId, title) => {
 };
 
 const deleteSubSop = (id) => {
-  return authFetch(`http://192.168.1.3:8000/api/subsop/${id}/`, {
+  return authFetch(`${api_base_url}/api/subsop/{id}/`, {
     method: "DELETE",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({}),
@@ -26,7 +25,7 @@ const deleteSubSop = (id) => {
 };
 
 const EditSubSop = (id, sopId, subSopName) => {
-  return authFetch(`http://192.168.1.3:8000/api/subsop/${id}/`, {
+  return authFetch(`${api_base_url}/api/subsop/{id}/`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -37,7 +36,7 @@ const EditSubSop = (id, sopId, subSopName) => {
 };
 
 const addSopType = (SopName) => {
-  return authFetch(`http://192.168.1.3:8000/api/soptypes/`, {
+  return authFetch(`${api_base_url}/api/soptypes/`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -47,7 +46,7 @@ const addSopType = (SopName) => {
 };
 
 // const addSubSop = () => {
-//     return authFetch("http://192.168.1.3:8000/api/soptypes/").then((res) =>
+//     return authFetch(`${api_base_url}/api/soptypes/`).then((res) =>
 //       res.json()
 //     );
 //   };

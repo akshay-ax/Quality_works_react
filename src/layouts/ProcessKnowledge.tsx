@@ -16,7 +16,7 @@ import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
 import { padding } from "@mui/system";
 import { authFetch } from "../provider/AuthProvider";
 import { useSelector } from "react-redux";
-import AnalayticService from "../Services/Analatics/Agents.service";
+import AnalayticService from "../../src/Services/Analatics/Agents.service";
 
 function ProcessKnowledge() {
   const storeData = useSelector((state: any) => state?.FilterReducer?.data);

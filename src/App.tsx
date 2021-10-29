@@ -52,7 +52,7 @@ const App = () => {
               <Route exact path="/">
                 <Redirect to="/login" />
               </Route>
-              <LoginLayoutRoute path="/login" component={Login} />
+              <LoginLayoutRoute path="/login" exact component={Login} />
               <DashboardLayoutRoute path="/" component={Dashboard} />
               {/* <DashboardLayoutRoute path="/analaytic" component={Analaytics} /> */}
               {/* {routes.map((route: RouteItem) =>

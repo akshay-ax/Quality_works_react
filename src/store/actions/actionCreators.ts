@@ -1,6 +1,8 @@
 import { authFetch } from "../../provider/AuthProvider";
 import * as actionTypes from "./actionTypes";
 
+const api_base_url = process.env.REACT_APP_API_BASE_URL;
+
 export const fetchAnalaticsdata = () => async (dispatch) => {
   const requestOptions = {
     method: "POST",
@@ -8,7 +10,7 @@ export const fetchAnalaticsdata = () => async (dispatch) => {
     // body: JSON.stringify({ id: e.target.value }),
   };
   const response = await authFetch(
-    "http://192.168.1.3:8000/elastic/allfilter/",
+    `${api_base_url}/elastic/allfilter/`,
     requestOptions
   ).then((res) => res.json());
 
@@ -28,7 +30,7 @@ export const fetchAnalaticsdataOnLob =
       }),
     };
     const response = await authFetch(
-      "http://192.168.1.3:8000/elastic/allfilter/",
+      `${api_base_url}/elastic/allfilter/`,
       requestOptions
     ).then((res) => res.json());
 
@@ -58,7 +60,7 @@ export const fetchAnalaticsdataOnTeam =
       }),
     };
     const response = await authFetch(
-      "http://192.168.1.3:8000/elastic/allfilter/",
+      `${api_base_url}/elastic/allfilter/`,
       requestOptions
     ).then((res) => res.json());
 
@@ -91,7 +93,7 @@ export const fetchAnalaticsdataOnAgent =
       }),
     };
     const response = await authFetch(
-      "http://192.168.1.3:8000/elastic/allfilter/",
+      `${api_base_url}/elastic/allfilter/`,
       requestOptions
     ).then((res) => res.json());
 
@@ -124,7 +126,7 @@ export const fetchAnalaticsdataOnMatrixtype =
       }),
     };
     const response = await authFetch(
-      "http://192.168.1.3:8000/elastic/allfilter/",
+      `${api_base_url}/elastic/allfilter/`,
       requestOptions
     ).then((res) => res.json());
 

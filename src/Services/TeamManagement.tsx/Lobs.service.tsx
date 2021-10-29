@@ -1,13 +1,11 @@
 import { authFetch } from "../../provider/AuthProvider";
-
+const api_base_url = process.env.REACT_APP_API_BASE_URL;
 const getLobs = () => {
-  return authFetch("http://192.168.1.3:8000/api/lob/").then((res) =>
-    res.json()
-  );
+  return authFetch(`${api_base_url}/api/lob/`).then((res) => res.json());
 };
 
 const addLobs = (lobname) => {
-  return authFetch("http://192.168.1.3:8000/api/lob/", {
+  return authFetch(`${api_base_url}/api/lob/`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -17,7 +15,7 @@ const addLobs = (lobname) => {
 };
 
 const deleteLobs = (id) => {
-  return authFetch(`http://192.168.1.3:8000/api/lob/${id}/`, {
+  return authFetch(`${api_base_url}/api/lob/${id}/`, {
     method: "DELETE",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({}),
@@ -25,7 +23,7 @@ const deleteLobs = (id) => {
 };
 
 const EditLobs = (lobname, id) => {
-  return authFetch(`http://192.168.1.3:8000/api/lob/${id}/`, {
+  return authFetch(`${api_base_url}/api/lob/${id}/`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({

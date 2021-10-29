@@ -20,12 +20,14 @@ import { login } from "../../../provider/AuthProvider";
 import { FunctionComponent } from "react";
 import { Route, useHistory } from "react-router";
 import { Password } from "@mui/icons-material";
-
 type LoginInputs = {
   username: string;
   password: string;
 };
 
+var api_base_url = process.env.REACT_APP_API_BASE_URL;
+console.log(api_base_url);
+console.log(process.env);
 const Login: FunctionComponent = ({ children }) => {
   const history = useHistory();
   const {
@@ -37,7 +39,7 @@ const Login: FunctionComponent = ({ children }) => {
   } = useForm<LoginInputs>();
   const onSubmit: SubmitHandler<LoginInputs> = (data) => {
     console.log(data);
-    fetch("http://192.168.1.3:8000/api/login/", {
+    fetch(`${api_base_url}/api/login/`, {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
@@ -47,9 +49,14 @@ const Login: FunctionComponent = ({ children }) => {
     })
       .then((r) => r.json())
       .then((res) => {
+        console.log(res);
+        if (!res.error) {
+          history.push("/dashboard");
+        } else {
+          console.log(res.message);
+        }
         login({ accessToken: res.data.access_token });
         // navigate("/dashboard");
-        history.push("/dashboard");
       });
   };
 
