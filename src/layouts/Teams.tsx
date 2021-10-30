@@ -10,11 +10,14 @@ import {
   FilledInput,
   FormControl,
   Grid,
+  InputLabel,
   MenuItem,
   Select,
+  SelectChangeEvent,
   Typography,
 } from "@mui/material";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { MultiSelect } from "react-multi-select-component";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import makeStyles from "@mui/styles/makeStyles";
 import createStyles from "@mui/styles/createStyles";
 import {
@@ -31,22 +34,46 @@ import {
   Page,
   Sort,
 } from "@syncfusion/ej2-react-grids";
-import LobsService from "../Services/TeamManagement.tsx/Lobs.service";
+import TeamsService from "../Services/TeamManagement.tsx/Team.service";
+import AnalayticService from "../Services/Analatics/Agents.service";
 
 type LobInputs = {
   Teamname: string;
-  No_Agent: number;
-  Location: number;
+  No_Agent: string;
+  Location: string;
+  select: "";
+  multiselect: any;
+};
+
+const defaultValues = {
+  select: "",
+  Teamname: "",
+  No_Agent: "",
+  Location: "",
+  multiselect: "",
 };
 
 function Teams() {
   const classes = useStyles();
-  const [openlob, setOpenlob] = useState<boolean>(false);
-  const [lobdataSource, setLobDataSource] = useState<any>({});
+  const [openTeam, setOpenTeam] = useState<boolean>(false);
+  const [teamdataSource, setTeamDataSource] = useState<any>({});
   const [selectId, setSelectId] = useState<any>();
+  const [repotinManagerData, setRepotinManagerData] = useState<any>();
+  const [repotinManagerValue, setRepotinManagerValue] = useState<any>();
+  const [lobvalue, setLobvalue] = useState<any>([]);
+  const [lob, setLob] = useState<any>([]);
+  const [loblist, setLoblist] = useState<any>([]);
 
   useEffect(() => {
-    LobsService.getLobs().then((res) => setLobDataSource(res.data));
+    TeamsService.getTeams().then((res) => {
+      setTeamDataSource(res.data);
+      console.log(res.data);
+    });
+    AnalayticService.getAllLob().then((res) => setLob(res.data));
+    TeamsService.getReportingManager().then((res) => {
+      setRepotinManagerData(res.data);
+      console.log(res.data);
+    });
   }, []);
 
   const {
@@ -54,51 +81,104 @@ function Teams() {
     handleSubmit,
     watch,
     setValue,
+    control,
     reset,
     formState: { errors },
-  } = useForm<LobInputs>();
+  } = useForm<any>({ defaultValues });
   const onSubmit: SubmitHandler<LobInputs> = (data) => {
     console.log(data);
-    // if (selectId) {
-    //   LobsService.EditLobs(data.lobname, selectId).then(() => {
-    //     setSelectId("");
-    //     LobsService.getLobs().then((res) => setLobDataSource(res.data));
-    //   });
-    // } else {
-    //   LobsService.addLobs(data.lobname).then(() => {
-    //     setSelectId("");
-    //     LobsService.getLobs().then((res) => setLobDataSource(res.data));
-    //   });
-    // }
+    console.log(loblist);
+    console.log(repotinManagerValue);
+    // var manager: Array<string> = [];
+    // manager.push(data.select);
+    if (selectId) {
+      TeamsService.EditTeam(
+        selectId,
+        data.select,
+        loblist,
+        data.Location,
+        data.No_Agent,
+        data.Teamname
+      ).then(() => {
+        TeamsService.getTeams().then((res) => {
+          setSelectId("");
+          setTeamDataSource(res.data);
+        });
+      });
+    } else {
+      TeamsService.addteam(
+        data.Teamname,
+        data.No_Agent,
+        data.Location,
+        loblist,
+        data.select
+      ).then(() => {
+        TeamsService.getTeams().then((res) => setTeamDataSource(res.data));
+      });
+    }
     // console.log(data);
     handleClose();
   };
 
   const addNewLobHandle = (e) => {
+    setSelectId("");
+    setLoblist([]);
+    setLobvalue([]);
     reset();
-    setOpenlob(true);
+    setOpenTeam(true);
   };
 
   const handleRefresh = () => {};
 
   const handleClose = () => {
     // setAnchorEl(null);
-    setOpenlob(false);
+    setOpenTeam(false);
   };
 
   const handleEdit = (item) => {
+    var lobId: Array<string> = [];
     setSelectId(item.id);
-    // setValue("lobname", item.Lob_name);
-    setOpenlob(true);
+    // setLobvalue{}
+    item.LOB.map((item) => {
+      lobId.push(item);
+    });
+    setLobvalue(lobId);
+    setValue("Teamname", item.Team_name);
+    setValue("No_Agent", item.No_agentns);
+    setValue("Location", item.Locations);
+    setValue("select", item.Reporting_manager.id);
+    setOpenTeam(true);
     console.log(item);
   };
 
   const handleDelete = (item) => {
-    // console.log(item)
-    LobsService.deleteLobs(item.id).then((res) =>
-      LobsService.getLobs().then((res) => setLobDataSource(res.data))
+    console.log(item);
+    TeamsService.deleteTeam(item.id).then((res) =>
+      TeamsService.getTeams().then((res) => setTeamDataSource(res.data))
     );
     console.log(item);
+  };
+
+  const lobs = (props: any) => {
+    // console.log(props);
+    const handleNavigate = (
+      e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
+    ): void => {
+      // if (!item.enabled) e.preventDefault();
+      console.log(e);
+    };
+    // console.log(props);
+
+    return (
+      <>
+        {props.LOB?.map((item) => (
+          <div>{item.Lob_name}</div>
+        ))}
+        {/* {props.LOB[0]?.Lob_name},{props.LOB[1]?.Lob_name},
+        {props.LOB[2]?.Lob_name},{props.LOB[3]?.Lob_name} */}
+        {/* </NavLink> */}
+      </>
+    );
   };
 
   const view = (props: any) => {
@@ -109,7 +189,7 @@ function Teams() {
       // if (!item.enabled) e.preventDefault();
       console.log(e);
     };
-    console.log(props);
+    // console.log(props);
 
     return (
       <>
@@ -134,6 +214,19 @@ function Teams() {
         {/* </NavLink> */}
       </>
     );
+  };
+  const handleChangelob = (e) => {
+    var lobId: Array<string> = [];
+    e.map((item) => {
+      lobId.push(item.value);
+    });
+    setLoblist(lobId);
+    setLobvalue(e);
+    console.log(e);
+  };
+
+  const handleChangeRMdata = (e: SelectChangeEvent) => {
+    setRepotinManagerValue(e?.target?.value);
   };
 
   return (
@@ -171,7 +264,7 @@ function Teams() {
             </Button>
             <Dialog
               classes={{ paper: classes.paper }}
-              open={openlob}
+              open={openTeam}
               onClose={handleClose}
             >
               <DialogTitle>
@@ -200,69 +293,142 @@ function Teams() {
                 </Grid>
               </DialogTitle>
               <DialogContent sx={{ pb: "0px" }}>
-                <FormControl className={classes.fillWidth} variant="filled">
+                <FormControl
+                  sx={{ mb: "15px" }}
+                  className={classes.fillWidth}
+                  variant="filled"
+                >
                   <FilledInput
                     type="text"
                     multiline
-                    placeholder="Enter Teamname"
-                    rows={2}
+                    className={classes.fieldInput}
+                    placeholder="Enter teamname"
                     {...register("Teamname")}
                     id="lobname"
                     disableUnderline={true}
                   />
                 </FormControl>
-                <FormControl className={classes.fillWidth} variant="filled">
+                <FormControl
+                  sx={{ mb: "15px" }}
+                  className={classes.fillWidth}
+                  variant="filled"
+                >
                   <FilledInput
                     type="text"
                     multiline
-                    placeholder="Enter No of Agent "
-                    rows={2}
+                    className={classes.fieldInput}
+                    placeholder="Enter no of agent "
                     {...register("No_Agent")}
                     id="lobname"
                     disableUnderline={true}
                   />
                 </FormControl>
-                <FormControl className={classes.fillWidth} variant="filled">
+                <FormControl
+                  sx={{ mb: "15px" }}
+                  className={classes.fillWidth}
+                  variant="filled"
+                >
                   <FilledInput
                     type="text"
                     multiline
-                    placeholder="Enter no of Location"
-                    rows={2}
+                    className={classes.fieldInput}
+                    placeholder="Enter no of location"
                     {...register("Location")}
                     id="lobname"
                     disableUnderline={true}
                   />
                 </FormControl>
-                <FormControl className={classes.fillWidth} variant="filled">
-                  {/* <Select
-                  value={lobvalue}
-                  onChange={handleChangelob}
-                  sx={{ width: "148.77px" }}
-                  displayEmpty
-                  // IconComponent={(_props) => (
-                  //   <KeyboardArrowDownIcon sx={{ mr: 1 }} />
-                  // )}
-                  disableUnderline={true}
-                  className={classes.Select}
-                  inputProps={{
-                    "aria-label": "Without label",
-                  }}
-                >
-                  <MenuItem className={classes.MenuItem} value="">
-                    Select LOB
-                  </MenuItem>
-                  {lob &&
-                    lob.map((item, index) => (
-                      <MenuItem
-                        className={classes.MenuItem}
-                        key={item.id}
-                        value={item.id}
-                      >
-                        {item.Lob_name}
-                      </MenuItem>
-                    ))}
-                </Select> */}
-                </FormControl>
+                <Grid item>
+                  <FormControl
+                    sx={{ mb: "15px" }}
+                    // className={classes.fillWidth}
+                    fullWidth
+                    // variant="filled"
+                  >
+                    <Controller
+                      render={({ field }) => (
+                        <Select
+                          {...field}
+                          sx={{ width: "148.77px" }}
+                          displayEmpty
+                          disableUnderline={true}
+                          className={classes.Select}
+                          inputProps={{
+                            "aria-label": "Without label",
+                          }}
+                        >
+                          <MenuItem className={classes.MenuItem} value="">
+                            Select Manager
+                          </MenuItem>
+                          {repotinManagerData &&
+                            repotinManagerData.map((item, index) => (
+                              <MenuItem
+                                className={classes.MenuItem}
+                                key={item.id}
+                                value={item.id}
+                              >
+                                {item.Manager_name}
+                              </MenuItem>
+                            ))}
+                        </Select>
+                      )}
+                      control={control}
+                      name="select"
+                    />
+                    {/* <Select
+                    value={repotinManagerValue}
+                    onChange={handleChangeRMdata}
+                    displayEmpty
+                    // IconComponent={(_props) => (
+                    //   <KeyboardArrowDownIcon sx={{ mr: 1 }} />
+                    // )}
+                    disableUnderline={true}
+                    className={classes.Select}
+                    inputProps={{
+                      "aria-label": "Without label",
+                    }}
+                  >
+                    <MenuItem className={classes.MenuItem} value="">
+                      Select Manager
+                    </MenuItem>
+                    {repotinManagerData &&
+                      repotinManagerData.map((item, index) => (
+                        <MenuItem
+                          className={classes.MenuItem}
+                          key={item.id}
+                          value={item.id}
+                        >
+                          {item.Manager_name}
+                        </MenuItem>
+                      ))}
+                  </Select> */}
+                  </FormControl>
+                </Grid>
+                <Controller
+                  render={({ field }) => (
+                    <MultiSelect
+                      {...field}
+                      options={lob}
+                      onChange={handleChangelob}
+                      value={lobvalue}
+                      className={classes.Select}
+                      labelledBy="Lob"
+                      hasSelectAll={false}
+                      // valueRenderer={customValueRenderer}
+                      overrideStrings={{
+                        allItemsAreSelected: "All items are selected.",
+                        clearSearch: "Clear Search",
+                        noOptions: "No options",
+                        search: "Search",
+                        selectAll: "Select All",
+                        selectAllFiltered: "Select All (Filtered)",
+                        selectSomeItems: "Select Lob",
+                      }}
+                    />
+                  )}
+                  control={control}
+                  name="multiselect"
+                />
               </DialogContent>
               <DialogActions sx={{ pr: "24px", mb: "24px" }}>
                 <Button
@@ -286,18 +452,24 @@ function Teams() {
         <Grid item>
           <Divider sx={{ marginTop: "16px", marginBottom: "32px" }} />
           <GridComponent
-            dataSource={lobdataSource}
+            dataSource={teamdataSource}
             allowPaging={true}
             className={classes.th}
             dataSourceChanged={handleRefresh}
             allowSorting={true}
           >
             <ColumnsDirective>
-              <ColumnDirective field="Lob_name" headerText="LOBs" width="80%" />
+              <ColumnDirective field="Team_name" headerText="Team Name" />
+              <ColumnDirective field="LOB" headerText="LOBs" template={lobs} />
+              <ColumnDirective field="Locations" headerText="Location" />
+              <ColumnDirective field="No_agentns" headerText="No Agents" />
+              <ColumnDirective
+                field="Reporting_manager.Manager_name"
+                headerText="Manager name"
+              />
               <ColumnDirective
                 field="action"
                 headerText="Action"
-                width="20%"
                 textAlign="Center"
                 template={view}
               />
@@ -316,6 +488,10 @@ export default Teams;
 
 const useStyles = makeStyles((theme) =>
   createStyles({
+    fieldInput: {
+      padding: "8px 12px 8px",
+      fontSize: "16px",
+    },
     paper: { minWidth: "822px" },
     boxShadow: {
       boxShadow: "2px 4px 8px rgba(33, 33, 33, 0.1)",
@@ -324,6 +500,7 @@ const useStyles = makeStyles((theme) =>
       border: "none",
     },
     Select: {
+      width: "100%",
       backgroundColor: "#ECEFF1",
       color: "#212121",
       height: "40px",
@@ -331,6 +508,12 @@ const useStyles = makeStyles((theme) =>
       fontSize: "14px",
       lineHeight: "20px",
       borderRadius: "4px",
+      "& .MuiFilledInput-input": {
+        paddingTop: "12px",
+      },
+      // "& .MuiFormLabel-root .MuiInputLabel-root": {
+      //   top: "-7px",
+      // },
       "& .dropdown-container": {
         "& .gray": {
           color: "#212121",
@@ -353,7 +536,6 @@ const useStyles = makeStyles((theme) =>
       },
     },
     MenuItem: {
-      width: "149px",
       color: "#212121",
       height: "40px",
       fontWeight: "normal",
@@ -371,6 +553,14 @@ const useStyles = makeStyles((theme) =>
       },
     },
     button: {
+      border: "1px solid #338DCD",
+      background: "#E6F1F9",
+      color: "black",
+      fontStyle: "normal",
+      fontWeight: "normal",
+      fontSize: "14px",
+      lineHeight: "20px",
+      padding: "8px 16px",
       "&:hover": {
         border: "1px solid #338DCD",
         background: "#E6F1F9",

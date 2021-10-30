@@ -307,6 +307,14 @@ const useStyles = makeStyles((theme) =>
       },
     },
     button: {
+      border: "1px solid #338DCD",
+      background: "#E6F1F9",
+      color: "black",
+      fontStyle: "normal",
+      fontWeight: "normal",
+      fontSize: "14px",
+      lineHeight: "20px",
+      padding: "8px 16px",
       "&:hover": {
         border: "1px solid #338DCD",
         background: "#E6F1F9",
