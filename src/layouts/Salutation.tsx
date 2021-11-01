@@ -37,7 +37,7 @@ import FormatItalicIcon from "@mui/icons-material/FormatItalic";
 import SendIcon from "@mui/icons-material/Send";
 import DownloadIcon from "@mui/icons-material/Download";
 import { DateRange } from "@mui/lab/DateRangePicker";
-
+import FadeLoader from "react-spinners/FadeLoader";
 import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import { createStyles, makeStyles } from "@mui/styles";
@@ -48,7 +48,15 @@ import { DateRangePicker } from "rsuite";
 import "rsuite/dist/rsuite.min.css";
 import { useSelector } from "react-redux";
 import AnalayticService from "../Services/Analatics/Agents.service";
+import { css } from "@emotion/react";
+
 // import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
+
+const override = css`
+  display: block;
+  margin: 0 auto;
+  border-color: red;
+`;
 
 const Salutation = () => {
   const storeData = useSelector((state: any) => state?.FilterReducer?.data);
@@ -59,6 +67,7 @@ const Salutation = () => {
   const [endDate, setEndDate] = useState<any>();
   const [showAgentCol, setShowAgentCol] = useState<any>(false);
   const [showcol, setShowcol] = useState<any>(false);
+  let [loading, setLoading] = useState<boolean>(true);
   const [lobvalue, setLobvalue] = useState<any>([]);
   const [Teamlist, setTeamlist] = useState<any>();
   const [Agentlist, setAgentlist] = useState<any>();
@@ -77,6 +86,7 @@ const Salutation = () => {
   const [dataSource, setDataSource] = useState<any>({});
   const [SalutationData, setSalutationData] = useState<any>({});
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  let [color, setColor] = useState("#D65654");
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -102,6 +112,7 @@ const Salutation = () => {
       storeData?.Agent_id
     ).then((res) => {
       setSalutationData(res.data);
+      setLoading(false);
       console.log(res.data);
     });
   }, [storeData]);
@@ -504,31 +515,39 @@ const Salutation = () => {
             <StatusBanner />
           </Grid>
         </Grid>
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-          sx={{ marginBottom: "12px" }}
-        >
-          <Typography variant="h4">Call Opening</Typography>
-          <Button
-            variant="outlined"
-            className={classes.button}
-            startIcon={<AddIcon sx={{ color: "#0070C0" }} />}
-          >
-            Add Salutation
-          </Button>
-        </Stack>
-        <Grid container spacing={2}>
-          {SalutationData?.Call_Opening?.map((item) => {
-            return (
-              <Grid item lg={4} xl={4}>
-                <CircularProgressWithLabel value={item} />
-              </Grid>
-            );
-          })}
+        {loading ? (
+          <Grid item sx={{ width: "100%" }}>
+            <Divider sx={{ marginTop: "16px", marginBottom: "32px" }} />
+            <FadeLoader color={color} loading={loading} css={override} />
+            <Divider sx={{ marginTop: "16px", marginBottom: "32px" }} />
+          </Grid>
+        ) : (
+          <div>
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              sx={{ marginBottom: "12px" }}
+            >
+              <Typography variant="h4">Call Opening</Typography>
+              <Button
+                variant="outlined"
+                className={classes.button}
+                startIcon={<AddIcon sx={{ color: "#0070C0" }} />}
+              >
+                Add Salutation
+              </Button>
+            </Stack>
+            <Grid container spacing={2}>
+              {SalutationData?.Call_Opening?.map((item) => {
+                return (
+                  <Grid item lg={4} xl={4}>
+                    <CircularProgressWithLabel value={item} />
+                  </Grid>
+                );
+              })}
 
-          {/* <Grid item lg={4} xl={3}>
+              {/* <Grid item lg={4} xl={3}>
             <CircularProgressWithLabel value={20} />
           </Grid>
           <Grid item lg={4} xl={3}>
@@ -546,32 +565,57 @@ const Salutation = () => {
           <Grid item lg={4} xl={3}>
             <CircularProgressWithLabel value={90} />
           </Grid> */}
-        </Grid>
-        <Divider sx={{ marginTop: "16px", marginBottom: "32px" }} />
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-          sx={{ marginBottom: "12px" }}
-        >
-          <Typography variant="h4">Customer Verification</Typography>
-          <Button
-            variant="outlined"
-            className={classes.button}
-            startIcon={<AddIcon sx={{ color: "#0070C0" }} />}
-          >
-            Add Salutation
-          </Button>
-        </Stack>
-        <Grid container spacing={2}>
-          {SalutationData?.customer_authentication?.map((item) => {
-            return (
-              <Grid item lg={4} xl={4}>
-                <CircularProgressWithLabel value={item} />
-              </Grid>
-            );
-          })}
-          {/* <Grid item lg={4} xl={3}>
+            </Grid>
+            <Divider sx={{ marginTop: "16px", marginBottom: "32px" }} />
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              sx={{ marginBottom: "12px" }}
+            >
+              <Typography variant="h4">Customer Verification</Typography>
+              <Button
+                variant="outlined"
+                className={classes.button}
+                startIcon={<AddIcon sx={{ color: "#0070C0" }} />}
+              >
+                Add Salutation
+              </Button>
+            </Stack>
+            <Grid container spacing={2}>
+              {SalutationData?.customer_authentication?.map((item) => {
+                return (
+                  <Grid item lg={4} xl={4}>
+                    <CircularProgressWithLabel value={item} />
+                  </Grid>
+                );
+              })}
+            </Grid>
+            <Divider sx={{ marginTop: "16px", marginBottom: "32px" }} />
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              sx={{ marginBottom: "12px" }}
+            >
+              <Typography variant="h4">On Hold</Typography>
+              <Button
+                variant="outlined"
+                className={classes.button}
+                startIcon={<AddIcon sx={{ color: "#0070C0" }} />}
+              >
+                Add Salutation
+              </Button>
+            </Stack>
+            <Grid container spacing={2}>
+              {SalutationData?.on_hold?.map((item) => {
+                return (
+                  <Grid item lg={4} xl={4}>
+                    <CircularProgressWithLabel value={item} />
+                  </Grid>
+                );
+              })}
+              {/* <Grid item lg={4} xl={3}>
             <CircularProgressWithLabel value={10} />
           </Grid>
           <Grid item lg={4} xl={3}>
@@ -592,62 +636,9 @@ const Salutation = () => {
           <Grid item lg={4} xl={3}>
             <CircularProgressWithLabel value={90} />
           </Grid> */}
-        </Grid>
-        <Divider sx={{ marginTop: "16px", marginBottom: "32px" }} />
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-          sx={{ marginBottom: "12px" }}
-        >
-          <Typography variant="h4">On Hold</Typography>
-          <Button
-            variant="outlined"
-            className={classes.button}
-            startIcon={<AddIcon sx={{ color: "#0070C0" }} />}
-          >
-            Add Salutation
-          </Button>
-        </Stack>
-        <Grid container spacing={2}>
-          {SalutationData?.on_hold?.map((item) => {
-            return (
-              <Grid item lg={4} xl={4}>
-                <CircularProgressWithLabel value={item} />
-              </Grid>
-            );
-          })}
-          {/* <Grid item lg={4} xl={3}>
-            <CircularProgressWithLabel value={10} />
-          </Grid>
-          <Grid item lg={4} xl={3}>
-            <CircularProgressWithLabel value={20} />
-          </Grid>
-          <Grid item lg={4} xl={3}>
-            <CircularProgressWithLabel value={80} />
-          </Grid>
-          <Grid item lg={4} xl={3}>
-            <CircularProgressWithLabel value={90} />
-          </Grid>
-          <Grid item lg={4} xl={3}>
-            <CircularProgressWithLabel value={90} />
-          </Grid>
-          <Grid item lg={4} xl={3}>
-            <CircularProgressWithLabel value={90} />
-          </Grid>
-          <Grid item lg={4} xl={3}>
-            <CircularProgressWithLabel value={90} />
-          </Grid> */}
-        </Grid>
-        {/* <Divider sx={{ marginTop: "16px", marginBottom: "32px" }} /> */}
-        {/* <Grid container spacing={2}>
-          <Grid item xs={6}>
-            <QualificationCard />
-          </Grid>
-          <Grid item xs={6}>
-            <QualificationCard />
-          </Grid>
-        </Grid> */}
+            </Grid>
+          </div>
+        )}
       </Grid>
     </Grid>
   );

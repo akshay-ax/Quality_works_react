@@ -12,11 +12,20 @@ import { padding } from "@mui/system";
 import { authFetch } from "../provider/AuthProvider";
 import { useSelector } from "react-redux";
 import AnalayticService from "../Services/Analatics/Agents.service";
+import { css } from "@emotion/react";
+
+const override = css`
+  display: block;
+  margin: 0 auto;
+  border-color: red;
+`;
 
 function SoftSkills() {
   const storeData = useSelector((state: any) => state?.FilterReducer?.data);
   const classes = useStyles();
   const [dataSource, setDataSource] = useState<any>({});
+  let [loading, setLoading] = useState<boolean>(true);
+  let [color, setColor] = useState("#D65654");
 
   useEffect(() => {
     // const dateRequestOptions = {
@@ -37,6 +46,7 @@ function SoftSkills() {
     ).then((res) => {
       setDataSource(res.data);
       console.log(res.data);
+      setLoading(false);
     });
   }, []);
 
