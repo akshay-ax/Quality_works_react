@@ -448,15 +448,14 @@ const Analaytics = () => {
   return (
     <div>
       <Grid container spacing={1}>
-        <Grid item lg={10}>
+        <Grid item lg={9}>
           <Grid
             container
             direction="row"
             justifyContent="flex-start"
             alignItems="center"
-            spacing={2}
           >
-            <Grid item>
+            <Grid item lg={2} xl={2} sx={{ mr: "10px" }}>
               <DateRangePicker
                 format="yyyy-MM-dd"
                 placeholder="Select Date"
@@ -464,8 +463,8 @@ const Analaytics = () => {
                 className={classes.dateRange}
               />
             </Grid>
-            <Grid item>
-              <FormControl sx={{ minWidth: 120 }}>
+            <Grid item lg={2} xl={2} sx={{ mr: "10px" }}>
+              <FormControl sx={{ width: "100%" }}>
                 {/* <MultiSelect
                   options={lob}
                   onChange={handleChangelob}
@@ -487,18 +486,18 @@ const Analaytics = () => {
                 <Select
                   value={lobvalue}
                   onChange={handleChangelob}
-                  sx={{ width: "148.77px" }}
                   displayEmpty
-                  IconComponent={(_props) => (
-                    <KeyboardArrowDownIcon sx={{ mr: 1 }} />
-                  )}
                   disableUnderline={true}
                   className={classes.Select}
                   inputProps={{
                     "aria-label": "Without label",
                   }}
                 >
-                  <MenuItem className={classes.MenuItem} value="">
+                  <MenuItem
+                    className={classes.MenuItem}
+                    sx={{ pr: "0px", width: "100%" }}
+                    value=""
+                  >
                     Select LOB
                   </MenuItem>
                   {lob &&
@@ -514,9 +513,9 @@ const Analaytics = () => {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item>
+            <Grid item lg={2} xl={2} sx={{ mr: "10px" }}>
               {" "}
-              <Box sx={{ width: "148px" }}>
+              <Box>
                 <MultiSelect
                   options={team}
                   onChange={handleChangeteam}
@@ -535,9 +534,9 @@ const Analaytics = () => {
                 />
               </Box>
             </Grid>
-            <Grid item>
+            <Grid item lg={2} xl={2} sx={{ mr: "10px" }}>
               {" "}
-              <Box sx={{ width: "148px" }}>
+              <Box>
                 <MultiSelect
                   options={agent}
                   className={classes.Select}
@@ -550,9 +549,9 @@ const Analaytics = () => {
                 />
               </Box>
             </Grid>
-            <Grid item>
+            <Grid item lg={2} xl={2}>
               {" "}
-              <Box sx={{ width: "148px" }}>
+              <Box>
                 <MultiSelect
                   options={matrixType}
                   className={classes.Select}
@@ -567,7 +566,7 @@ const Analaytics = () => {
             </Grid>
           </Grid>
         </Grid>
-        <Grid item md={2}>
+        <Grid item lg={3}>
           <Grid container direction="row" justifyContent="flex-end">
             <Button
               variant="outlined"
@@ -653,14 +652,12 @@ const useStyles = makeStyles((theme) =>
       padding: "10px",
       fontSize: "14px",
       fontWeight: "normal",
-      width: "125px",
       lineHeight: "20px",
       fontFamily: "Roboto",
       color: "#212121",
       height: "40px",
     },
     MenuItem: {
-      width: "149px",
       color: "#212121",
       height: "40px",
       fontWeight: "normal",
@@ -668,10 +665,11 @@ const useStyles = makeStyles((theme) =>
       lineHeight: "20px",
     },
     dateRange: {
+      width: "100%",
       "& .rs-picker-toggle.rs-btn.rs-btn-default": {
         backgroundColor: "#ECEFF1",
-        width: "148px",
         padding: "10px",
+        width: "100%",
       },
       "& span.rs-picker-toggle-placeholder": {
         color: "#212121",

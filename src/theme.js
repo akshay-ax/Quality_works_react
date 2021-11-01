@@ -1,6 +1,16 @@
 import { NoEncryption } from "@mui/icons-material";
 import { createTheme } from "@mui/material/styles";
 
+const breakpoints = {
+  values: {
+    xs: 0,
+    sm: 0, // Phone
+    md: 1200, // Tablet/Laptop
+    lg: 1400, // Desktop
+    xl: 1500,
+  },
+};
+
 const theme = createTheme({
   status: {
     danger: "#e53e3e",
@@ -104,7 +114,13 @@ const theme = createTheme({
     fontSize: 16,
     subtitle1: {
       color: "rgba(0, 0, 0, 0.87)",
-      fontSize: 16,
+      fontSize: "1rem",
+      [`@media screen and (max-width: ${breakpoints.values.lg}px)`]: {
+        fontSize: "0.875rem",
+      },
+      [`@media screen and (max-width: ${breakpoints.values.md}px)`]: {
+        fontSize: "0.75rem",
+      },
       lineHeight: "24px",
       fontFamily: "Roboto",
     },
@@ -112,7 +128,13 @@ const theme = createTheme({
       color: "#212121",
       textTransform: "none",
       fontFamily: "Roboto",
-      fontSize: "14px",
+      fontSize: "1rem",
+      [`@media screen and (max-width: ${breakpoints.values.lg}px)`]: {
+        fontSize: "0.875rem",
+      },
+      [`@media screen and (max-width: ${breakpoints.values.md}px)`]: {
+        fontSize: "0.75rem",
+      },
       fontStyle: "normal",
       fontWeight: 500,
     },
@@ -121,19 +143,48 @@ const theme = createTheme({
       fontSize: "14px",
       lineHeight: "20px",
       fontWeight: "normal",
+      fontSize: "1rem",
+      [`@media screen and (max-width: ${breakpoints.values.lg}px)`]: {
+        fontSize: "0.875rem",
+      },
+      [`@media screen and (max-width: ${breakpoints.values.md}px)`]: {
+        fontSize: "0.75rem",
+      },
+    },
+    caption: {
+      fontFamily: "Roboto",
+      fontSize: "1rem",
+      [`@media screen and (max-width: ${breakpoints.values.lg}px)`]: {
+        fontSize: "0.875rem",
+      },
+      [`@media screen and (max-width: ${breakpoints.values.md}px)`]: {
+        fontSize: "0.75rem",
+      },
     },
     h4: {
       color: "rgba(0, 0, 0, 0.87)",
       fontFamily: "Roboto",
       fontWeight: 600,
-      fontSize: "20px",
+      fontSize: "1.25rem",
+      [`@media screen and (max-width: ${breakpoints.values.lg}px)`]: {
+        fontSize: "1rem",
+      },
+      [`@media screen and (max-width: ${breakpoints.values.md}px)`]: {
+        fontSize: "0.875rem",
+      },
       lineHeight: "28px",
     },
     h5: {
+      fontSize: "1rem",
+      [`@media screen and (max-width: ${breakpoints.values.lg}px)`]: {
+        fontSize: "0.875rem",
+      },
+      [`@media screen and (max-width: ${breakpoints.values.md}px)`]: {
+        fontSize: "0.75rem",
+      },
       color: "rgba(0, 0, 0, 0.87)",
       fontFamily: "Roboto",
       fontWeight: 600,
-      fontSize: "16px",
       lineHeight: "24px",
     },
   },

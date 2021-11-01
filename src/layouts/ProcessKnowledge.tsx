@@ -18,6 +18,16 @@ import { authFetch } from "../provider/AuthProvider";
 import { useSelector } from "react-redux";
 import AnalayticService from "../../src/Services/Analatics/Agents.service";
 
+const breakpoints = {
+  values: {
+    xs: 0,
+    sm: 0, // Phone
+    md: 1200, // Tablet/Laptop
+    lg: 1400, // Desktop
+    xl: 1500,
+  },
+};
+
 function ProcessKnowledge() {
   const storeData = useSelector((state: any) => state?.FilterReducer?.data);
   const classes = useStyles();
@@ -368,7 +378,9 @@ const Tagging = (props) => {
       <Box sx={{ height: "384px", overflowY: "scroll" }}>
         <Box sx={{ width: "100%", p: 2 }}>
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Typography sx={{ width: "200px", pl: 2 }}>Deactivation</Typography>
+            <Typography variant="caption" sx={{ width: "200px", pl: 2 }}>
+              Deactivation
+            </Typography>
             <Box sx={{ width: "100%", mr: 1, pr: 2 }}>
               <LinearProgress
                 sx={{
@@ -385,16 +397,19 @@ const Tagging = (props) => {
               />
             </Box>
             <Box sx={{ minWidth: 35, mr: 2 }}>
-              <Typography variant="body2" color="text.secondary">{`${Math.round(
-                props.value.Deactivation
-              )}%`}</Typography>
+              <Typography
+                variant="caption"
+                color="text.secondary"
+              >{`${Math.round(props.value.Deactivation)}%`}</Typography>
             </Box>
           </Box>
         </Box>
         <Divider></Divider>
         <Box sx={{ width: "100%", p: 2 }}>
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Typography sx={{ width: "200px", pl: 2 }}>Plan Details</Typography>
+            <Typography variant="caption" sx={{ width: "200px", pl: 2 }}>
+              Plan Details
+            </Typography>
             <Box sx={{ width: "100%", mr: 1, pr: 2 }}>
               <LinearProgress
                 sx={{
@@ -421,7 +436,9 @@ const Tagging = (props) => {
         <Divider></Divider>
         <Box sx={{ width: "100%", p: 2 }}>
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Typography sx={{ width: "200px", pl: 2 }}>PORT</Typography>
+            <Typography variant="caption" sx={{ width: "200px", pl: 2 }}>
+              PORT
+            </Typography>
             <Box sx={{ width: "100%", mr: 1, pr: 2 }}>
               <LinearProgress
                 sx={{
@@ -447,7 +464,9 @@ const Tagging = (props) => {
         <Divider></Divider>
         <Box sx={{ width: "100%", p: 2 }}>
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Typography sx={{ width: "200px", pl: 2 }}>Signal</Typography>
+            <Typography variant="caption" sx={{ width: "200px", pl: 2 }}>
+              Signal
+            </Typography>
             <Box sx={{ width: "100%", mr: 1, pr: 2 }}>
               <LinearProgress
                 sx={{
@@ -464,16 +483,19 @@ const Tagging = (props) => {
               />
             </Box>
             <Box sx={{ minWidth: 35, mr: 2 }}>
-              <Typography variant="body2" color="text.secondary">{`${Math.round(
-                props.value.Signal
-              )}%`}</Typography>
+              <Typography
+                variant="caption"
+                color="text.secondary"
+              >{`${Math.round(props.value.Signal)}%`}</Typography>
             </Box>
           </Box>
         </Box>
         <Divider></Divider>
         <Box sx={{ width: "100%", p: 2 }}>
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Typography sx={{ width: "200px", pl: 2 }}>Activate</Typography>
+            <Typography variant="caption" sx={{ width: "200px", pl: 2 }}>
+              Activate
+            </Typography>
             <Box sx={{ width: "100%", mr: 1, pr: 2 }}>
               <LinearProgress
                 sx={{
@@ -490,16 +512,19 @@ const Tagging = (props) => {
               />
             </Box>
             <Box sx={{ minWidth: 35, mr: 2 }}>
-              <Typography variant="body2" color="text.secondary">{`${Math.round(
-                props.value.Activate
-              )}%`}</Typography>
+              <Typography
+                variant="caption"
+                color="text.secondary"
+              >{`${Math.round(props.value.Activate)}%`}</Typography>
             </Box>
           </Box>
         </Box>
         <Divider></Divider>
         <Box sx={{ width: "100%", p: 2 }}>
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Typography sx={{ width: "200px", pl: 2 }}>Activate</Typography>
+            <Typography variant="caption" sx={{ width: "200px", pl: 2 }}>
+              Activate
+            </Typography>
             <Box sx={{ width: "100%", mr: 1, pr: 2 }}>
               <LinearProgress
                 sx={{
@@ -516,16 +541,19 @@ const Tagging = (props) => {
               />
             </Box>
             <Box sx={{ minWidth: 35, mr: 2 }}>
-              <Typography variant="body2" color="text.secondary">{`${Math.round(
-                props.value.Activate
-              )}%`}</Typography>
+              <Typography
+                variant="caption"
+                color="text.secondary"
+              >{`${Math.round(props.value.Activate)}%`}</Typography>
             </Box>
           </Box>
         </Box>
         <Divider></Divider>
         <Box sx={{ width: "100%", p: 2 }}>
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Typography sx={{ width: "200px", pl: 2 }}>Activate</Typography>
+            <Typography variant="caption" sx={{ width: "200px", pl: 2 }}>
+              Activate
+            </Typography>
             <Box sx={{ width: "100%", mr: 1, pr: 2 }}>
               <LinearProgress
                 sx={{
@@ -542,16 +570,19 @@ const Tagging = (props) => {
               />
             </Box>
             <Box sx={{ minWidth: 35, mr: 2 }}>
-              <Typography variant="body2" color="text.secondary">{`${Math.round(
-                props.value.Activate
-              )}%`}</Typography>
+              <Typography
+                variant="caption"
+                color="text.secondary"
+              >{`${Math.round(props.value.Activate)}%`}</Typography>
             </Box>
           </Box>
         </Box>
         <Divider></Divider>
         <Box sx={{ width: "100%", p: 2 }}>
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Typography sx={{ width: "200px", pl: 2 }}>Activate</Typography>
+            <Typography variant="caption" sx={{ width: "200px", pl: 2 }}>
+              Activate
+            </Typography>
             <Box sx={{ width: "100%", mr: 1, pr: 2 }}>
               <LinearProgress
                 sx={{
@@ -568,16 +599,19 @@ const Tagging = (props) => {
               />
             </Box>
             <Box sx={{ minWidth: 35, mr: 2 }}>
-              <Typography variant="body2" color="text.secondary">{`${Math.round(
-                props.value.Activate
-              )}%`}</Typography>
+              <Typography
+                variant="caption"
+                color="text.secondary"
+              >{`${Math.round(props.value.Activate)}%`}</Typography>
             </Box>
           </Box>
         </Box>
         <Divider></Divider>
         <Box sx={{ width: "100%", p: 2 }}>
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Typography sx={{ width: "200px", pl: 2 }}>Activate</Typography>
+            <Typography variant="caption" sx={{ width: "200px", pl: 2 }}>
+              Activate
+            </Typography>
             <Box sx={{ width: "100%", mr: 1, pr: 2 }}>
               <LinearProgress
                 sx={{
@@ -594,9 +628,10 @@ const Tagging = (props) => {
               />
             </Box>
             <Box sx={{ minWidth: 35, mr: 2 }}>
-              <Typography variant="body2" color="text.secondary">{`${Math.round(
-                props.value.Activate
-              )}%`}</Typography>
+              <Typography
+                variant="caption"
+                color="text.secondary"
+              >{`${Math.round(props.value.Activate)}%`}</Typography>
             </Box>
           </Box>
         </Box>
@@ -619,6 +654,13 @@ const CallTransferRate = (props) => {
         fontFamily: "Roboto",
         fontWeight: "bold",
         color: "#212121",
+        fontSize: "0.875rem",
+        [`@media screen and (max-width: ${breakpoints.values.lg}px)`]: {
+          fontSize: "0.875rem",
+        },
+        [`@media screen and (max-width: ${breakpoints.values.md}px)`]: {
+          fontSize: "0.75rem",
+        },
       },
       // line-height: 24px;
     },

@@ -20,6 +20,16 @@ const override = css`
   border-color: red;
 `;
 
+const breakpoints = {
+  values: {
+    xs: 0,
+    sm: 0, // Phone
+    md: 1200, // Tablet/Laptop
+    lg: 1400, // Desktop
+    xl: 1500,
+  },
+};
+
 function SoftSkills() {
   const storeData = useSelector((state: any) => state?.FilterReducer?.data);
   const classes = useStyles();
@@ -505,6 +515,13 @@ const RateOfSpeechCharts = (props) => {
         fontFamily: "Roboto",
         fontWeight: "bold",
         color: "#212121",
+        fontSize: "0.875rem",
+        [`@media screen and (max-width: ${breakpoints.values.lg}px)`]: {
+          fontSize: "0.875rem",
+        },
+        [`@media screen and (max-width: ${breakpoints.values.md}px)`]: {
+          fontSize: "0.75rem",
+        },
       },
     },
     legend: {
@@ -642,6 +659,13 @@ const VoiceVolumeCharts = (props) => {
         fontFamily: "Roboto",
         fontWeight: "bold",
         color: "#212121",
+        fontSize: "0.875rem",
+        [`@media screen and (max-width: ${breakpoints.values.lg}px)`]: {
+          fontSize: "0.875rem",
+        },
+        [`@media screen and (max-width: ${breakpoints.values.md}px)`]: {
+          fontSize: "0.75rem",
+        },
       },
     },
     xAxis: {
