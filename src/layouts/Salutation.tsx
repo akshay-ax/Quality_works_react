@@ -217,14 +217,13 @@ const Salutation = () => {
         startDate,
         endDate
       )
-        .then((res) => res.json())
-        .then((res) => {
-          console.log(res.data);
-          // setDataSource([]);
-          setShowAgentCol(true);
-          setDataSource(res.data);
-          // grid.dataSource.unshift(res.data);
-        });
+      .then((res) => {
+        console.log(res.data);
+        // setDataSource([]);
+        setShowAgentCol(true);
+        setDataSource(res.data);
+        // grid.dataSource.unshift(res.data);
+      });
     } else {
       setAgentvalue([]);
     }
@@ -479,7 +478,7 @@ const Salutation = () => {
               />
             </Box>
           </Grid>
-          <Grid item>
+          {/* <Grid item>
             {" "}
             <Box sx={{ width: "148px" }}>
               <MultiSelect
@@ -493,7 +492,7 @@ const Salutation = () => {
                 }}
               />
             </Box>
-          </Grid>
+          </Grid> */}
         </Grid>
       </Grid>
       <Grid item lg={3}>

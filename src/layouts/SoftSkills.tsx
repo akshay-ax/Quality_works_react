@@ -63,7 +63,7 @@ function SoftSkills() {
   return (
     <div>
       <Grid container spacing={2} sx={{ marginBottom: "32px" }}>
-        <Grid item xs={12}>
+        <Grid item lg={12}>
           <Card className={classes.card}>
             <CardContent sx={{ paddingBottom: "16px !important" }}>
               <Grid
@@ -123,10 +123,10 @@ function SoftSkills() {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12} sx={{ mt: 2 }}>
+        <Grid item lg={12} sx={{ mt: 2 }}>
           <Typography variant="h4">Empathy</Typography>
           <Grid container>
-            <Grid item xs={12}>
+            <Grid item lg={12}>
               <Box
                 className={classes.chart}
                 sx={{ mt: 1, pt: 5, pl: 5, pr: 5 }}
@@ -139,7 +139,7 @@ function SoftSkills() {
             Communication
           </Typography>
           <Grid container sx={{ mt: 0.5 }} spacing={2}>
-            <Grid item xs={6}>
+            <Grid item lg={6}>
               <Box
                 className={classes.chart}
                 sx={{ padding: "25px 25px 15px 25px" }}
@@ -147,7 +147,7 @@ function SoftSkills() {
                 <RateOfSpeechCharts value={dataSource} />
               </Box>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item lg={6}>
               <Box
                 className={classes.chart}
                 sx={{ padding: "25px 25px 15px 25px" }}
@@ -157,7 +157,7 @@ function SoftSkills() {
             </Grid>
           </Grid>
           <Grid container sx={{ mt: 0.5 }} spacing={2}>
-            <Grid item xs={4}>
+            <Grid item lg={4}>
               <Box className={classes.chart}>
                 <Typography variant="h4" sx={{ mt: 3, ml: 3, mb: 2 }}>
                   Curiosity
@@ -196,7 +196,7 @@ function SoftSkills() {
                 </Typography> */}
               </Box>
             </Grid>
-            <Grid item xs={4}>
+            <Grid item lg={4}>
               <Box className={classes.chart}>
                 <Typography variant="h4" sx={{ mt: 3, ml: 3, mb: 2 }}>
                   Clarity
@@ -234,7 +234,7 @@ function SoftSkills() {
                 </Typography> */}
               </Box>
             </Grid>
-            <Grid item xs={4}>
+            <Grid item lg={4}>
               <Box className={classes.chart}>
                 <Typography variant="h4" sx={{ mt: 3, ml: 3, mb: 2 }}>
                   Responsiveness
@@ -304,7 +304,7 @@ const SemiCircleBar = (props) => {
   const opts = {
     chart: {
       plotBorderWidth: 0,
-      height: "250px",
+      height: "230px",
     },
     credits: {
       enabled: false,

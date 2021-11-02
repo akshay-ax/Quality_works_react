@@ -140,7 +140,6 @@ const theme = createTheme({
     },
     h6: {
       color: "#757575",
-      fontSize: "14px",
       lineHeight: "20px",
       fontWeight: "normal",
       fontSize: "1rem",

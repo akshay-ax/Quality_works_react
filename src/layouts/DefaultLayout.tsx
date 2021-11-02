@@ -46,6 +46,7 @@ import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import Salutation from "./Salutation";
 import { height, width } from "@mui/system";
 import { NavLink, Route } from "react-router-dom";
+import { useHistory } from "react-router";
 import routes from "../Routes";
 import Analaytics from "./Analaytics";
 import SoftSkills from "./SoftSkills";
@@ -54,6 +55,16 @@ import { ComponentType, FC } from "react";
 import vector from "../../src/asserts/images/Vector.svg";
 
 const drawerWidth = 240;
+
+const breakpoints = {
+  values: {
+    xs: 0,
+    sm: 0, // Phone
+    md: 1200, // Tablet/Laptop
+    lg: 1400, // Desktop
+    xl: 1500,
+  },
+};
 
 interface RouteItem {
   key: String;
@@ -153,12 +164,21 @@ const Search = styled("div")(({ theme }) => ({
   },
   width: "100%",
   color: "black",
-  [theme.breakpoints.up("sm")]: {
+  [theme.breakpoints.up("lg")]: {
     marginLeft: theme.spacing(1),
   },
 }));
 
 const SearchIconWrapper = styled("div")(({ theme }) => ({
+  "& .MuiSvgIcon-root": {
+    fontSize: "1.525rem",
+    [`@media screen and (max-width: ${breakpoints.values.lg}px)`]: {
+      fontSize: "1.5rem",
+    },
+    [`@media screen and (max-width: ${breakpoints.values.md}px)`]: {
+      fontSize: "1.25rem",
+    },
+  },
   padding: theme.spacing(0, 44),
   color: "rgba(0, 0, 0, 0.38)",
   height: "100%",
@@ -171,11 +191,24 @@ const SearchIconWrapper = styled("div")(({ theme }) => ({
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   "& .MuiInputBase-input": {
+    fontSize: "1rem",
+    [`@media screen and (max-width: ${breakpoints.values.lg}px)`]: {
+      fontSize: "0.875rem",
+    },
+    [`@media screen and (max-width: ${breakpoints.values.md}px)`]: {
+      fontSize: "0.75rem",
+    },
     padding: theme.spacing(1, 1, 1, 0),
     paddingLeft: `calc(2px + ${theme.spacing(1)})`,
     transition: theme.transitions.create("width"),
     width: "100%",
-    [theme.breakpoints.up("sm")]: {
+    [theme.breakpoints.up("lg")]: {
+      width: "350px",
+    },
+    [theme.breakpoints.up("xl")]: {
+      width: "375px",
+    },
+    [theme.breakpoints.up("md")]: {
       width: "375px",
     },
   },
@@ -190,6 +223,7 @@ function TeamManagementIcon(props: SvgIconProps) {
 }
 
 const DefaultLayout = ({ children, ...rest }) => {
+  const history = useHistory();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const classes = useStyles();
   const theme = useTheme();
@@ -202,6 +236,10 @@ const DefaultLayout = ({ children, ...rest }) => {
     setOpen(!open);
   };
 
+  const redirectTodashboard = () => {
+    history.push("/dashboard");
+  };
+
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -212,14 +250,6 @@ const DefaultLayout = ({ children, ...rest }) => {
       path: "/dashboard",
       Icon: DashboardIcon,
       depth: 1,
-      items: [
-        {
-          title: "CSAT",
-          path: "/csat",
-          Icon: SyncIcon,
-          depth: 3,
-        },
-      ],
     },
     {
       title: "Analaytics",
@@ -314,14 +344,14 @@ const DefaultLayout = ({ children, ...rest }) => {
       path: "/sopconfiguration",
       Icon: AutorenewIcon,
       depth: 1,
-      items: [
-        {
-          title: "Quality",
-          path: "/quality",
-          Icon: SyncIcon,
-          depth: 3,
-        },
-      ],
+      // items: [
+      //   {
+      //     title: "Quality",
+      //     path: "/quality",
+      //     Icon: SyncIcon,
+      //     depth: 3,
+      //   },
+      // ],
     },
     {
       title: "Team Management",
@@ -413,7 +443,12 @@ const DefaultLayout = ({ children, ...rest }) => {
           </IconButton>
           <Typography sx={{ pt: "10px" }} noWrap component="div">
             <ImageList>
-              <img src={Logo} alt="header logo" loading="lazy" />
+              <img
+                src={Logo}
+                alt="header logo"
+                loading="lazy"
+                onClick={redirectTodashboard}
+              />
             </ImageList>
           </Typography>
 
@@ -425,12 +460,15 @@ const DefaultLayout = ({ children, ...rest }) => {
                   <SearchIcon />
                 </SearchIconWrapper>
                 <StyledInputBase
-                  placeholder="Search for an argent or matric"
+                  placeholder="Search for an agent or matric"
                   inputProps={{ "aria-label": "search" }}
                 />
               </Search>
             </Box>
-            <IconButton size="large" aria-label="show 17 new notifications">
+            <IconButton
+              className={classes.iconbutton}
+              aria-label="show 17 new notifications"
+            >
               <Badge color="error">
                 <NotificationsIcon sx={{ color: "rgba(0, 0, 0, 0.6)" }} />
               </Badge>
@@ -442,11 +480,11 @@ const DefaultLayout = ({ children, ...rest }) => {
               flexItem
             />
             <IconButton
-              size="large"
               edge="end"
               aria-label="account of current user"
               aria-controls={menuId}
               aria-haspopup="true"
+              className={classes.iconbutton}
               onClick={handleProfileMenuOpen}
             >
               <AccountCircle sx={{ color: "rgba(0, 0, 0, 0.6)" }} />
@@ -483,7 +521,10 @@ const DefaultLayout = ({ children, ...rest }) => {
           </List>
         )}
       </Drawer>
-      <Box component="main" sx={{ backgroundColor: "#E5E5E5", width: "100%" }}>
+      <Box
+        component="main"
+        sx={{ backgroundColor: "#E5E5E5", width: "100%", overflow: "hidden" }}
+      >
         <Box
           sx={{
             flexGrow: 1,
@@ -534,6 +575,17 @@ export const DashboardLayoutRoute = ({ component: Component, ...rest }) => {
 export default DefaultLayout;
 const useStyles = makeStyles((theme) =>
   createStyles({
+    iconbutton: {
+      "& .MuiSvgIcon-root": {
+        fontSize: "1.725rem",
+        [`@media screen and (max-width: ${breakpoints.values.lg}px)`]: {
+          fontSize: "1.5rem",
+        },
+        [`@media screen and (max-width: ${breakpoints.values.md}px)`]: {
+          fontSize: "1.25rem",
+        },
+      },
+    },
     appMenu: {
       width: "100%",
     },

@@ -416,19 +416,10 @@ const Analaytics = () => {
   };
 
   const view = (props: any) => {
-    // console.log(props);
-    const handleNavigate = (
-      e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
-    ): void => {
-      // if (!item.enabled) e.preventDefault();
-      console.log(e);
-    };
-
     return (
       <>
-        {props["CQ SCORES"]}
-        {/* <NavLink to={`analaytic/agent/salutation`} onClick={handleNavigate}> */}
         <Button
+          className={classes.viewbtn}
           onClick={(e) => {
             e.preventDefault();
             history.push("analaytic/agent/salutation");
@@ -436,11 +427,10 @@ const Analaytics = () => {
             console.log("onClick", props);
           }}
           variant="outlined"
-          sx={{ float: "right", border: "0px", color: "#0070C0" }}
+          sx={{ color: "#0070C0", border: "1px solid #0070C0" }}
         >
           view
         </Button>
-        {/* </NavLink> */}
       </>
     );
   };
@@ -570,21 +560,24 @@ const Analaytics = () => {
           <Grid container direction="row" justifyContent="flex-end">
             <Button
               variant="outlined"
-              sx={{ height: "36px" }}
+              className={classes.downloadbtn}
+              // sx={{ height: "36px", border: "1px solid #E0E0E0" }}
               endIcon={<DownloadIcon />}
             >
               Download Report
             </Button>
           </Grid>
         </Grid>
+      </Grid>
+      <Grid container>
         {loading ? (
-          <Grid item sx={{ width: "100%" }}>
+          <Grid item xs={12}>
             <Divider sx={{ marginTop: "16px", marginBottom: "32px" }} />
             <FadeLoader color={color} loading={loading} css={override} />
             <Divider sx={{ marginTop: "16px", marginBottom: "32px" }} />
           </Grid>
         ) : (
-          <Grid item>
+          <Grid item xs={12} sx={{ width: "1700px" }}>
             <Divider sx={{ marginTop: "16px", marginBottom: "32px" }} />
             <GridComponent
               dataSource={dataSource?.data}
@@ -593,29 +586,25 @@ const Analaytics = () => {
               dataSourceChanged={handleRefresh}
               dataBound={dataBound}
               allowSorting={true}
+              width="100%"
             >
               <ColumnsDirective>
                 {dataSource?.att_array &&
                   dataSource.att_array.map((item) => {
-                    if (item === "CQ SCORES") {
-                      return (
-                        <ColumnDirective
-                          field={item}
-                          headerText={item}
-                          width="159.5px"
-                          template={view}
-                        />
-                      );
-                    } else {
-                      return (
-                        <ColumnDirective
-                          field={item}
-                          headerText={item}
-                          width="100%"
-                        />
-                      );
-                    }
+                    return (
+                      <ColumnDirective
+                        field={item}
+                        headerText={item}
+                        width={200}
+                        textAlign="Center"
+                      />
+                    );
                   })}
+                <ColumnDirective
+                  width={200}
+                  template={view}
+                  textAlign="Center"
+                />
               </ColumnsDirective>
               <Inject
                 services={[Sort, ColumnMenu, Filter, Page, Group, Edit]}
@@ -632,6 +621,15 @@ const Analaytics = () => {
 
 const useStyles = makeStyles((theme) =>
   createStyles({
+    downloadbtn: {
+      border: "1px solid #E0E0E0",
+      padding: "8px 12px",
+      color: "#212121",
+      fontFamily: "Roboto",
+      fontWeight: "normal",
+      fontSize: "14px",
+      lineHeight: "20px",
+    },
     noBorder: {
       border: "none",
     },
@@ -663,6 +661,12 @@ const useStyles = makeStyles((theme) =>
       fontWeight: "normal",
       fontSize: "14px",
       lineHeight: "20px",
+    },
+    viewbtn: {
+      padding: "0px",
+      "&:hover": {
+        border: "1px solid #0070C0",
+      },
     },
     dateRange: {
       width: "100%",

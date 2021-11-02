@@ -32,6 +32,16 @@ export type AppMenuItemProps = AppMenuItemPropsWithoutItems & {
   items?: AppMenuItemProps[];
 };
 
+const breakpoints = {
+  values: {
+    xs: 0,
+    sm: 0, // Phone
+    md: 1200, // Tablet/Laptop
+    lg: 1400, // Desktop
+    xl: 1600,
+  },
+};
+
 const AppMenuItem: React.FC<AppMenuItemProps> = (props) => {
   const { title, Icon, items = [], depth, path } = props;
   const classes = useStyles();
@@ -53,8 +63,18 @@ const AppMenuItem: React.FC<AppMenuItemProps> = (props) => {
     var a = (
       <ListItemButton
         sx={{
-          color: "#9E9E9E",
-          p: 2,
+          color: "#757575",
+          p: "12px",
+          pt: "16px",
+          pb: "16px",
+          [`@media screen and (max-width: ${breakpoints.values.lg}px)`]: {
+            pt: "14px",
+            pb: "14px",
+          },
+          [`@media screen and (max-width: ${breakpoints.values.md}px)`]: {
+            pt: "14px",
+            pb: "14px",
+          },
           ...(open && {
             boxShadow: "inset 4px 0px 0px #0070C0",
             background: "#F5F5F5",
@@ -66,24 +86,30 @@ const AppMenuItem: React.FC<AppMenuItemProps> = (props) => {
         {/* Display an icon if any */}
         {!!Icon && (
           <ListItemIcon
-            className={classes.menuItemIcon}
             sx={{
+              ml: "9px",
               ...(open && {
                 color: "#0070C0",
               }),
             }}
+            className={classes.menuItemIcon}
           >
             <Icon />
           </ListItemIcon>
         )}
         <ListItemText
+          sx={{ display: "none" }}
           primary={title}
+          className={classes.listitemtext}
           inset={!Icon}
           disableTypography={true}
-          sx={{ fontSize: "16px" }}
         />
-        {isExpandable && !open && <ArrowRightIcon />}
-        {isExpandable && open && <ArrowDropDownIcon />}
+        {isExpandable && !open && (
+          <ArrowRightIcon sx={{ fontSize: "22px", display: "none" }} />
+        )}
+        {isExpandable && open && (
+          <ArrowDropDownIcon sx={{ fontSize: "22px", display: "none" }} />
+        )}
       </ListItemButton>
     );
   } else if (depth == 3) {
@@ -92,7 +118,16 @@ const AppMenuItem: React.FC<AppMenuItemProps> = (props) => {
         sx={{
           background: "rgba(236, 236, 236, 0.72)",
           color: "#757575",
-          p: 2,
+          pt: "16px",
+          pb: "16px",
+          [`@media screen and (max-width: ${breakpoints.values.lg}px)`]: {
+            pt: "14px",
+            pb: "14px",
+          },
+          [`@media screen and (max-width: ${breakpoints.values.md}px)`]: {
+            pt: "14px",
+            pb: "14px",
+          },
           ...(open && {
             fontWeight: "500",
             color: "#212121",
@@ -110,21 +145,33 @@ const AppMenuItem: React.FC<AppMenuItemProps> = (props) => {
           </ListItemIcon>
         )}
         <ListItemText
+          className={classes.listitemtext30}
           disableTypography={true}
-          sx={{ fontSize: "14px !important", pl: "12px" }}
+          sx={{ pl: "12px", mt: "6px" }}
           primary={title}
           inset={!Icon}
         />
         {/* Display the expand menu if the item has children */}
-        {isExpandable && !open && <ArrowRightIcon />}
-        {isExpandable && open && <ArrowDropDownIcon />}
+        {isExpandable && !open && <ArrowRightIcon sx={{ fontSize: "22px" }} />}
+        {isExpandable && open && (
+          <ArrowDropDownIcon sx={{ fontSize: "22px" }} />
+        )}
       </ListItemButton>
     );
   } else if (depth == 3.5) {
     var a = (
       <ListItemButton
         sx={{
-          p: 2,
+          pt: "16px",
+          pb: "16px",
+          [`@media screen and (max-width: ${breakpoints.values.lg}px)`]: {
+            pt: "14px",
+            pb: "14px",
+          },
+          [`@media screen and (max-width: ${breakpoints.values.md}px)`]: {
+            pt: "14px",
+            pb: "14px",
+          },
         }}
         onClick={handleClick}
       >
@@ -138,24 +185,38 @@ const AppMenuItem: React.FC<AppMenuItemProps> = (props) => {
           </ListItemIcon>
         )}
         <ListItemText
+          className={classes.listitemtext35}
           disableTypography={true}
           primary={title}
           inset={!Icon}
-          sx={{
-            fontSize: "14px !important",
-          }}
+          sx={{ mt: "6px" }}
+          // sx={{
+          //   fontSize: "14px !important",
+          // }}
         />
         {/* Display the expand menu if the item has children */}
-        {isExpandable && !open && <ArrowRightIcon />}
-        {isExpandable && open && <ArrowDropDownIcon />}
+        {isExpandable && !open && <ArrowRightIcon sx={{ fontSize: "22px" }} />}
+        {isExpandable && open && (
+          <ArrowDropDownIcon sx={{ fontSize: "22px" }} />
+        )}
       </ListItemButton>
     );
   } else {
     var a = (
       <ListItemButton
         sx={{
-          pl: depth,
-          p: "16px",
+          pl: "12px",
+          pt: "16px",
+          pb: "16px",
+          [`@media screen and (max-width: ${breakpoints.values.lg}px)`]: {
+            pt: "14px",
+            pb: "14px",
+          },
+          [`@media screen and (max-width: ${breakpoints.values.md}px)`]: {
+            pt: "14px",
+            pb: "14px",
+          },
+
           color: "#757575",
           ...(open && {
             boxShadow: "inset 4px 0px 0px #0070C0",
@@ -171,7 +232,8 @@ const AppMenuItem: React.FC<AppMenuItemProps> = (props) => {
           <ListItemIcon
             className={classes.menuItemIcon}
             sx={{
-              minWidth: "45px",
+              ml: "9px",
+              minWidth: "35px",
               ...(open && {
                 color: "#0070C0",
               }),
@@ -181,13 +243,16 @@ const AppMenuItem: React.FC<AppMenuItemProps> = (props) => {
           </ListItemIcon>
         )}
         <ListItemText
+          className={classes.listitemtext}
           primary={title}
           disableTypography={true}
-          sx={{ fontSize: "16px " }}
+          sx={{ mt: "0px", mb: "0px" }}
           inset={!Icon}
         />
-        {isExpandable && !open && <ArrowRightIcon />}
-        {isExpandable && open && <ArrowDropDownIcon />}
+        {isExpandable && !open && <ArrowRightIcon sx={{ fontSize: "22px" }} />}
+        {isExpandable && open && (
+          <ArrowDropDownIcon sx={{ fontSize: "22px" }} />
+        )}
       </ListItemButton>
     );
   }
@@ -224,9 +289,46 @@ const useStyles = makeStyles((theme) =>
     menuItem: {
       backgroundColor: "#ffffff",
     },
+    listitemtext: {
+      fontSize: "1rem",
+      [`@media screen and (max-width: ${breakpoints.values.lg}px)`]: {
+        fontSize: "0.875rem",
+      },
+      [`@media screen and (max-width: ${breakpoints.values.md}px)`]: {
+        fontSize: "0.875rem",
+      },
+    },
+    listitemtext35: {
+      fontSize: "0.875rem",
+      [`@media screen and (max-width: ${breakpoints.values.lg}px)`]: {
+        fontSize: "0.75rem",
+      },
+      [`@media screen and (max-width: ${breakpoints.values.md}px)`]: {
+        fontSize: "0.75rem",
+      },
+    },
+    listitemtext30: {
+      fontSize: "0.875rem",
+      [`@media screen and (max-width: ${breakpoints.values.lg}px)`]: {
+        fontSize: "0.75rem",
+      },
+      [`@media screen and (max-width: ${breakpoints.values.md}px)`]: {
+        fontSize: "0.75rem",
+      },
+    },
     menuItemIcon: {
-      Width: "24px",
-      height: "24px",
+      "& .MuiSvgIcon-root": {
+        Width: "24px",
+        height: "24px",
+        [`@media screen and (max-width: ${breakpoints.values.lg}px)`]: {
+          Width: "22px",
+          height: "22px",
+        },
+        [`@media screen and (max-width: ${breakpoints.values.md}px)`]: {
+          Width: "20px",
+          height: "20px",
+        },
+      },
     },
     active: {
       color: "#757575",
