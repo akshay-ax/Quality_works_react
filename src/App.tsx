@@ -13,7 +13,7 @@ import Login, { LoginLayoutRoute } from "./views/pages/login/Login";
 import Dashboard from "./layouts/Dashboard";
 import { ComponentType, FC } from "react";
 import { DashboardLayoutRoute } from "./layouts/DefaultLayout";
-import Analaytics from "./layouts/Analaytics";
+import Analaytics from "./layouts/Analytics";
 // import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 // import "../node_modules/jquery/dist/jquery.min.js";
 

@@ -68,7 +68,7 @@ const Salutation = () => {
   const [showAgentCol, setShowAgentCol] = useState<any>(false);
   const [showcol, setShowcol] = useState<any>(false);
   let [loading, setLoading] = useState<boolean>(true);
-  const [lobvalue, setLobvalue] = useState<any>([]);
+  const [lobvalue, setLobvalue] = useState<any>("");
   const [Teamlist, setTeamlist] = useState<any>();
   const [Agentlist, setAgentlist] = useState<any>();
   const [selected, setSelected] = useState<any>([]);
@@ -103,13 +103,56 @@ const Salutation = () => {
   //   genRandomKey();
   // }, []);
 
+  // useEffect(() => {
+  //   async function anyNameFunction() {
+  //     loadContent();
+  //   }
+  //   anyNameFunction().then(() => console.log(storeData?.LOB_id));
+  // }, [storeData]);
+
+  // const loadContent = () => {
+  //   console.log(storeData);
+  //   AnalayticService.getAllLob().then((res) => {
+  //     setLob(res.data);
+  //   });
+  //   AnalayticService.SalutationData(
+  //     storeData?.Agent_id,
+  //     storeData?.Team_id,
+  //     storeData?.LOB_id
+  //   ).then((res) => {
+  //     setSalutationData(res.data);
+  //     setLoading(false);
+  //     console.log(res.data);
+  //   });
+  // };
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //      const data = await getData(1);
+  //      setData(data);
+  //   }
+
+  //   fetchData();
+  // }, []);
+
+  useEffect(() => {
+    console.log("lob effevt", lob);
+    console.log(storeData?.LOB_id);
+    if (lob.length) {
+      console.log("lob console effevt", lob);
+      setLobvalue(storeData?.LOB_id);
+    }
+  }, [lob, storeData]);
+
   useEffect(() => {
     console.log(storeData);
-    AnalayticService.getAllLob().then((res) => setLob(res.data));
+    AnalayticService.getAllLob().then((res) => {
+      setLob(res.data);
+    });
     AnalayticService.SalutationData(
-      storeData?.LOB_id,
+      storeData?.Agent_id,
       storeData?.Team_id,
-      storeData?.Agent_id
+      storeData?.LOB_id
     ).then((res) => {
       setSalutationData(res.data);
       setLoading(false);
@@ -118,7 +161,7 @@ const Salutation = () => {
   }, [storeData]);
 
   const handleChangelob = (e: SelectChangeEvent) => {
-    console.log(e);
+    // alert(e);
     setLobvalue(e);
     console.log(e.target.value);
     if (e?.target?.value !== "") {
@@ -216,8 +259,7 @@ const Salutation = () => {
         lobvalue,
         startDate,
         endDate
-      )
-      .then((res) => {
+      ).then((res) => {
         console.log(res.data);
         // setDataSource([]);
         setShowAgentCol(true);
@@ -231,16 +273,16 @@ const Salutation = () => {
 
   console.log("dataSource :::", dataSource);
 
-  const handleChangeteam = (event) => {
-    setTeamvalue(event);
-    var teamsId: Array<string> = [];
+  const handleChangeteam = (event: SelectChangeEvent) => {
+    setTeamvalue(event.target.value);
+    // var teamsId: Array<string> = [];
 
-    event.map((item) => {
-      teamsId.push(item.value);
-    });
-    setTeamlist(teamsId);
-    console.log(typeof teamsId);
-    if (teamsId) {
+    // event.map((item) => {
+    //   teamsId.push(event.target.value);
+    // });
+    setTeamlist(event?.target.value);
+    // console.log(typeof teamsId);
+    if (event?.target.value) {
       // dispatch(
       //   fetchAnalaticsdataOnTeam(
       //     startDate,
@@ -257,7 +299,7 @@ const Salutation = () => {
         body: JSON.stringify({
           Matrix_list: MatrixListId,
           Agent_list: Agentlist,
-          Team_list: teamsId,
+          Team_list: event.target.value,
           Lob_id: lobvalue,
           start_date: startDate,
           end_date: endDate,
@@ -267,7 +309,7 @@ const Salutation = () => {
       AnalayticService.getAllFilterOnTeam(
         MatrixListId,
         Agentlist,
-        teamsId,
+        event.target.value,
         lobvalue,
         startDate,
         endDate
@@ -280,7 +322,7 @@ const Salutation = () => {
       //   headers: { "Content-Type": "application/json" },
       //   body: JSON.stringify({ id: teamsId }),
       // };
-      AnalayticService.agentDataShow(teamsId).then((res) => {
+      AnalayticService.agentDataShow(event.target.value).then((res) => {
         // let agentlist: Array<object> = [];
         // // res.data.forEach((item) => {
         // //   agentlist.push({ label: item.Agent_name, value: item.Agent_id });
@@ -288,7 +330,8 @@ const Salutation = () => {
         setAgentvalue([]);
         setAgent([]);
         setShowAgentCol(false);
-        setAgent(res.data);
+        console.log(res.data);
+        // setAgent(res.data);
       });
     } else {
       setTeamvalue([]);
@@ -410,8 +453,38 @@ const Salutation = () => {
               className={classes.dateRange}
             />
           </Grid>
-          <Grid item>
-            <FormControl sx={{ minWidth: 120 }}>
+          <Grid item lg={2} xl={2} sx={{ mr: "10px" }}>
+            <FormControl sx={{ width: "100%" }}>
+              <Select
+                value={lobvalue}
+                onChange={handleChangelob}
+                displayEmpty
+                disableUnderline={true}
+                className={classes.Select}
+                inputProps={{
+                  "aria-label": "Without label",
+                }}
+              >
+                <MenuItem
+                  className={classes.MenuItem}
+                  sx={{ pr: "0px", width: "100%" }}
+                  value=""
+                >
+                  Select LOB
+                </MenuItem>
+                {lob &&
+                  lob.map((item, index) => (
+                    <MenuItem
+                      className={classes.MenuItem}
+                      key={item.id}
+                      value={item.id}
+                    >
+                      {item.Lob_name}
+                    </MenuItem>
+                  ))}
+              </Select>
+            </FormControl>
+            {/* <FormControl sx={{ minWidth: 120 }}>
               <Select
                 value={lobvalue}
                 onChange={handleChangelob}
@@ -440,12 +513,40 @@ const Salutation = () => {
                     </MenuItem>
                   ))}
               </Select>
-            </FormControl>
+            </FormControl> */}
           </Grid>
-          <Grid item>
-            {" "}
-            <Box sx={{ width: "148px" }}>
-              <MultiSelect
+          <Grid item lg={2} xl={2} sx={{ mr: "10px" }}>
+            <FormControl sx={{ width: "100%" }}>
+              <Select
+                value={teamvalue}
+                onChange={handleChangeteam}
+                displayEmpty
+                disableUnderline={true}
+                className={classes.Select}
+                inputProps={{
+                  "aria-label": "Without label",
+                }}
+              >
+                <MenuItem
+                  className={classes.MenuItem}
+                  sx={{ pr: "0px", width: "100%" }}
+                  value=""
+                >
+                  Select team
+                </MenuItem>
+                {team &&
+                  team.map((item, index) => (
+                    <MenuItem
+                      className={classes.MenuItem}
+                      key={item.id}
+                      value={item.id}
+                    >
+                      {item.Team_name}
+                    </MenuItem>
+                  ))}
+              </Select>
+            </FormControl>
+            {/* <MultiSelect
                 options={team}
                 onChange={handleChangeteam}
                 value={teamvalue}
@@ -460,10 +561,40 @@ const Salutation = () => {
                   selectAllFiltered: "Select All (Filtered)",
                   selectSomeItems: "Select Team",
                 }}
-              />
-            </Box>
+              /> */}
           </Grid>
-          <Grid item>
+          <Grid item lg={2} xl={2} sx={{ mr: "10px" }}>
+            <FormControl sx={{ width: "100%" }}>
+              <Select
+                value={agentvalue}
+                onChange={handleChangeagent}
+                displayEmpty
+                disableUnderline={true}
+                className={classes.Select}
+                inputProps={{
+                  "aria-label": "Without label",
+                }}
+              >
+                <MenuItem
+                  className={classes.MenuItem}
+                  sx={{ pr: "0px", width: "100%" }}
+                  value=""
+                >
+                  Select agent
+                </MenuItem>
+                {agent &&
+                  agent.map((item, index) => (
+                    <MenuItem
+                      className={classes.MenuItem}
+                      key={item.id}
+                      value={item.id}
+                    >
+                      {item.Agent}
+                    </MenuItem>
+                  ))}
+              </Select>
+            </FormControl>
+            {/* <Grid item>
             {" "}
             <Box sx={{ width: "148px" }}>
               <MultiSelect
@@ -476,7 +607,7 @@ const Salutation = () => {
                   selectSomeItems: "Select Agent",
                 }}
               />
-            </Box>
+            </Box> */}
           </Grid>
           {/* <Grid item>
             {" "}

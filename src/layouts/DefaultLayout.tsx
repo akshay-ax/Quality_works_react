@@ -48,7 +48,7 @@ import { height, width } from "@mui/system";
 import { NavLink, Route } from "react-router-dom";
 import { useHistory } from "react-router";
 import routes from "../Routes";
-import Analaytics from "./Analaytics";
+import Analytics from "./Analytics";
 import SoftSkills from "./SoftSkills";
 import Dashboard from "./Dashboard";
 import { ComponentType, FC } from "react";
@@ -252,92 +252,92 @@ const DefaultLayout = ({ children, ...rest }) => {
       depth: 1,
     },
     {
-      title: "Analaytics",
-      path: "/analaytic",
+      title: "Analytics",
+      path: "/analytic",
       Icon: InsertChartIcon,
       depth: 1,
       items: [
         {
           title: "Agent",
-          path: "/analaytic/agent",
+          path: "/analytic/agent",
           Icon: SupportAgentIcon,
           depth: 3,
           items: [
             {
               title: "CSAT",
-              path: "/analaytic/agent/csat",
+              path: "/analytic/agent/csat",
               depth: 3.5,
             },
             {
               depth: 3.5,
               title: "Salutation",
-              path: "/analaytic/agent/salutation",
+              path: "/analytic/agent/salutation",
             },
             {
               depth: 3.5,
               title: "Soft Skills",
-              path: "/analaytic/agent/softSkills",
+              path: "/analytic/agent/softSkills",
             },
             {
               depth: 3.5,
               title: "Progress Knowledge",
-              path: "/analaytic/agent/processknowledge",
+              path: "/analytic/agent/processknowledge",
             },
             {
               depth: 3.5,
               title: "Call Closer",
-              path: "/analaytic/agent/callclosure",
+              path: "/analytic/agent/callclosure",
             },
             {
               depth: 3.5,
               title: "Voice",
-              path: "/analaytic/agent/voice",
+              path: "/analytic/agent/voice",
             },
             {
               depth: 3.5,
               title: "Sentiment",
-              path: "/analaytic/agent/sentiment",
+              path: "/analytic/agent/sentiment",
             },
           ],
         },
         {
           depth: 3,
           title: "Customer",
-          path: "/analaytic/customer",
+          path: "/analytic/customer",
           Icon: AccountCircleIcon,
           items: [
             {
               depth: 3.5,
               title: "Sentiment",
-              path: "/analaytic/customer/sentiment",
+              path: "/analytic/customer/sentiment",
             },
             {
               depth: 3.5,
               title: "TalkTime",
-              path: "/analaytic/customer/talkTime",
+              path: "/analytic/customer/talkTime",
             },
             {
               depth: 3.5,
               title: "Keywords",
-              path: "/analaytic/customer/keywords",
+              path: "/analytic/customer/keywords",
             },
           ],
         },
       ],
     },
     {
-      title: "Evoluation",
-      path: "/evoluation",
+      title: "Evaluation",
+      path: "/evaluation",
       Icon: VisibilityIcon,
       depth: 1,
-      items: [
-        {
-          title: "Quality",
-          path: "/quality",
-          Icon: SyncIcon,
-          depth: 3,
-        },
-      ],
+      // items: [
+      //   {
+      //     title: "Quality",
+      //     path: "/quality",
+      //     Icon: SyncIcon,
+      //     depth: 3,
+      //   },
+      // ],
     },
     {
       title: "SOP Configuration",
@@ -390,28 +390,28 @@ const DefaultLayout = ({ children, ...rest }) => {
       path: "/reports",
       Icon: DashboardIcon,
       depth: 1,
-      items: [
-        {
-          title: "Quality",
-          path: "/quality",
-          Icon: SyncIcon,
-          depth: 3,
-        },
-      ],
+      // items: [
+      //   {
+      //     title: "Quality",
+      //     path: "/quality",
+      //     Icon: SyncIcon,
+      //     depth: 3,
+      //   },
+      // ],
     },
     {
       title: "Setting",
       Icon: SettingsIcon,
       path: "/setting",
       depth: 1,
-      items: [
-        {
-          title: "Quality",
-          Icon: SyncIcon,
-          path: "/quality",
-          depth: 3,
-        },
-      ],
+      // items: [
+      //   {
+      //     title: "Quality",
+      //     Icon: SyncIcon,
+      //     path: "/quality",
+      //     depth: 3,
+      //   },
+      // ],
     },
   ];
 

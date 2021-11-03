@@ -17,15 +17,16 @@ const addSubSop = (sopId, title) => {
 };
 
 const deleteSubSop = (id) => {
-  return authFetch(`${api_base_url}/api/subsop/{id}/`, {
+  console.log(id);
+  return authFetch(`${api_base_url}/api/subsop/${id}/`, {
     method: "DELETE",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({}),
+    // body: JSON.stringify({}),
   }).then((res) => res.json());
 };
 
 const EditSubSop = (id, sopId, subSopName) => {
-  return authFetch(`${api_base_url}/api/subsop/{id}/`, {
+  return authFetch(`${api_base_url}/api/subsop/${id}/`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({

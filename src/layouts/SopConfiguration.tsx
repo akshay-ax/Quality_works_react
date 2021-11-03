@@ -83,6 +83,7 @@ function SopConfiguration() {
         );
       });
     } else {
+      console.log(sopId);
       SopConfigurationService.addSubSop(sopId, title).then(() =>
         SopConfigurationService.getSopConfigData().then((res) =>
           setSobConfigData(res.data)
@@ -110,7 +111,7 @@ function SopConfiguration() {
   const handleClickOpen = (e) => {
     setSubSopId("");
     reset();
-    // setSopId(e.id);
+    setSopId(e.id);
     setOpen(true);
   };
 
@@ -146,6 +147,7 @@ function SopConfiguration() {
 
   const handleDelete = (item) => {
     setAnchorEl(null);
+    console.log(item);
     SopConfigurationService.deleteSubSop(item).then(() => {
       SopConfigurationService.getSopConfigData().then((res) =>
         setSobConfigData(res.data)

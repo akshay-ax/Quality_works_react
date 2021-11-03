@@ -5,6 +5,7 @@ const useStyles: any = makeStyles(() =>
     "@global": {
       "*::-webkit-scrollbar": {
         width: "0.4em",
+        height: "0.4rem",
       },
       "*::-webkit-scrollbar-track": {
         "-webkit-box-shadow": "inset 0 0 6px #BDBDBD",

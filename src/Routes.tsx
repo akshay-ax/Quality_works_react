@@ -1,5 +1,5 @@
 import { ComponentType, FC } from "react";
-import Analaytics from "./layouts/Analaytics";
+import Analytics from "./layouts/Analytics";
 import CallClosure from "./layouts/CallClosure";
 import Dashboard from "./layouts/Dashboard";
 import DefaultLayout from "./layouts/DefaultLayout";
@@ -68,7 +68,7 @@ const routes: Array<RouteItem> = [
     key: "router-dashboard",
     component: Dashboard,
   },
-  // { path: "/", element: <Navigate to="/analaytics" /> },
+  // { path: "/", element: <Navigate to="/analytics" /> },
   {
     path: "/sopconfiguration",
     enabled: true,
@@ -114,77 +114,77 @@ const routes: Array<RouteItem> = [
     ],
   },
   {
-    path: "/analaytic",
+    path: "/analytic",
     enabled: true,
-    title: "Analaytic",
+    title: "Analytic",
     key: "router-analatics",
-    component: Analaytics,
+    component: Analytics,
   },
   {
-    path: "/analaytic/agent",
+    path: "/analytic/agent",
     enabled: true,
-    title: "Analaytic",
+    title: "Analytic",
     key: "router-analatics-agent",
-    component: Analaytics,
+    component: Analytics,
   },
   {
-    path: "/analaytic",
+    path: "/analytic",
     enabled: true,
-    title: "Analaytic",
+    title: "Analytic",
     key: "router-sub-analatics",
-    component: Analaytics,
+    component: Analytics,
     subRoutes: [
       {
-        path: "/analaytic/agent/salutation",
+        path: "/analytic/agent/salutation",
         key: "router-salutation",
         enabled: true,
         title: "salutation",
         component: Salutation,
       },
       // {
-      //   path: "/analaytic/agent/csat",
+      //   path: "/analytic/agent/csat",
       //   key: "router-csat",
       //   enabled: true,
       //   title: "CSAT",
       //   component: Csat,
       // },
       {
-        path: "/analaytic/agent/softskills",
+        path: "/analytic/agent/softskills",
         key: "router-softskills",
         enabled: true,
         title: "Soft Skills",
         component: SoftSkills,
       },
       {
-        path: "/analaytic/agent/processknowledge",
+        path: "/analytic/agent/processknowledge",
         key: "router-processknowledge",
         enabled: true,
         title: "Process Knowledge",
         component: ProcessKnowledge,
       },
       {
-        path: "/analaytic/agent/callclosure",
+        path: "/analytic/agent/callclosure",
         key: "router-callclosure",
         enabled: true,
         title: "Call closure",
         component: CallClosure,
       },
       {
-        path: "/analaytic/agent/voice",
+        path: "/analytic/agent/voice",
         key: "router-voice",
         enabled: true,
         title: "Voice",
         component: Voice,
       },
       {
-        path: "/analaytic/agent/Sentiment",
+        path: "/analytic/agent/Sentiment",
         key: "router-sentiment",
         enabled: true,
         title: "Sentiment",
         component: Sentiment,
       },
       {
-        path: "/analaytic/customer/keywords",
+        path: "/analytic/customer/keywords",
         key: "router-customer-keyword",
         enabled: true,
         title: "Sentiment",

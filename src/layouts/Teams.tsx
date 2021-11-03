@@ -459,18 +459,42 @@ function Teams() {
             allowSorting={true}
           >
             <ColumnsDirective>
-              <ColumnDirective field="Team_name" headerText="Team Name" />
-              <ColumnDirective field="LOB" headerText="LOBs" template={lobs} />
-              <ColumnDirective field="Locations" headerText="Location" />
-              <ColumnDirective field="No_agentns" headerText="No Agents" />
+              <ColumnDirective
+                field="Team_name"
+                width={150}
+                textAlign="Center"
+                headerText="Team Name"
+              />
+              <ColumnDirective
+                field="LOB"
+                width={150}
+                textAlign="Center"
+                headerText="LOBs"
+                template={lobs}
+              />
+              <ColumnDirective
+                field="Locations"
+                width={150}
+                textAlign="Center"
+                headerText="Location"
+              />
+              <ColumnDirective
+                field="No_agentns"
+                width={150}
+                textAlign="Center"
+                headerText="No Agents"
+              />
               <ColumnDirective
                 field="Reporting_manager.Manager_name"
                 headerText="Manager name"
+                width={200}
+                textAlign="Center"
               />
               <ColumnDirective
                 field="action"
                 headerText="Action"
                 textAlign="Center"
+                width={200}
                 template={view}
               />
             </ColumnsDirective>

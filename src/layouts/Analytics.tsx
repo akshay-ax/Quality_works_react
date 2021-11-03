@@ -423,7 +423,7 @@ const Analaytics = () => {
           onClick={(e) => {
             e.preventDefault();
             history.push("analaytic/agent/salutation");
-            // dispatch(storedata(props));
+            dispatch(storedata(props));
             console.log("onClick", props);
           }}
           variant="outlined"
